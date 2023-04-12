@@ -43,6 +43,21 @@ public class BasePage {
      */
     private String isAsc = "asc";
 
+    /**
+     * perhaps a legacy issue?
+     */
+    public void setIsAsc(String isAsc) {
+        if (StringUtils.isNotEmpty(isAsc)) {
+            // 兼容前端排序类型
+            if ("ascending".equals(isAsc)) {
+                isAsc = "asc";
+            } else if ("descending".equals(isAsc)) {
+                isAsc = "desc";
+            }
+            this.isAsc = isAsc;
+        }
+    }
+
     public Pageable buildPageable() {
         Sort sort = null;
         Sort.Direction direction;
