@@ -3,6 +3,7 @@ package com.ruoyi.web.controller.monitor;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.core.domain.ResponseEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -55,23 +56,21 @@ public class SysLogininforController extends BaseController {
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:remove')")
     @Log(title = "登录日志", businessType = BusinessType.DELETE)
     @DeleteMapping("/{infoIds}")
-    public AjaxResult remove(@PathVariable Long[] infoIds) {
-        return toAjax(logininforService.deleteLogininforByIds(infoIds));
+    public ResponseEntity<Void> remove(@PathVariable Long[] infoIds) {
+        return ResponseEntity.deduce(() -> logininforService.deleteLogininforByIds(infoIds));
     }
 
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:remove')")
     @Log(title = "登录日志", businessType = BusinessType.CLEAN)
     @DeleteMapping("/clean")
-    public AjaxResult clean() {
-        logininforService.cleanLogininfor();
-        return success();
+    public ResponseEntity<Void> clean() {
+        return ResponseEntity.deduce(logininforService::cleanLogininfor);
     }
 
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:unlock')")
     @Log(title = "账户解锁", businessType = BusinessType.OTHER)
     @GetMapping("/unlock/{userName}")
-    public AjaxResult unlock(@PathVariable("userName") String userName) {
-        passwordService.clearLoginRecordCache(userName);
-        return success();
+    public ResponseEntity<Void> unlock(@PathVariable("userName") String userName) {
+        return ResponseEntity.deduce(() -> passwordService.clearLoginRecordCache(userName));
     }
 }
