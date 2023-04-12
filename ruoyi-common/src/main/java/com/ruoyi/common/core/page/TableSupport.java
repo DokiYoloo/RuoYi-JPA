@@ -8,6 +8,7 @@ import com.ruoyi.common.utils.ServletUtils;
  *
  * @author ruoyi
  */
+@Deprecated
 public class TableSupport {
     /**
      * 当前记录起始索引

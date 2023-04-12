@@ -1,5 +1,8 @@
 package com.ruoyi.common.core.page;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -8,9 +11,9 @@ import java.util.List;
  *
  * @author ruoyi
  */
-public class TableDataInfo implements Serializable {
-    private static final long serialVersionUID = 1L;
-
+@Getter
+@Setter
+public class TableDataInfo<T> implements Serializable {
     /**
      * 总记录数
      */
@@ -19,7 +22,7 @@ public class TableDataInfo implements Serializable {
     /**
      * 列表数据
      */
-    private List<?> rows;
+    private List<T> rows;
 
     /**
      * 消息状态码
@@ -43,40 +46,8 @@ public class TableDataInfo implements Serializable {
      * @param list  列表数据
      * @param total 总记录数
      */
-    public TableDataInfo(List<?> list, int total) {
+    public TableDataInfo(List<T> list, int total) {
         this.rows = list;
         this.total = total;
-    }
-
-    public long getTotal() {
-        return total;
-    }
-
-    public void setTotal(long total) {
-        this.total = total;
-    }
-
-    public List<?> getRows() {
-        return rows;
-    }
-
-    public void setRows(List<?> rows) {
-        this.rows = rows;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
     }
 }

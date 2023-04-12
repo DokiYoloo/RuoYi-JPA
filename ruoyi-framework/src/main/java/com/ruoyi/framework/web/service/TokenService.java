@@ -13,6 +13,7 @@ import eu.bitwalker.useragentutils.UserAgent;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -28,7 +29,10 @@ import java.util.concurrent.TimeUnit;
  * @author ruoyi
  */
 @Component
+@RequiredArgsConstructor
 public class TokenService {
+    private final RedisCache redisCache;
+
     // 令牌自定义标识
     @Value("${token.header}")
     private String header;
@@ -47,9 +51,6 @@ public class TokenService {
 
     private static final Long MILLIS_MINUTE_TEN = 20 * 60 * 1000L;
 
-    @Autowired
-    private RedisCache redisCache;
-
     /**
      * 获取用户身份信息
      *
@@ -64,10 +65,8 @@ public class TokenService {
                 // 解析对应的权限以及用户信息
                 String uuid = (String) claims.get(Constants.LOGIN_USER_KEY);
                 String userKey = getTokenKey(uuid);
-                LoginUser user = redisCache.getCacheObject(userKey);
-                return user;
-            } catch (Exception e) {
-            }
+                return redisCache.getCacheObject(userKey);
+            } catch (Exception ignored) {}
         }
         return null;
     }
