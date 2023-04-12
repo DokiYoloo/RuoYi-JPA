@@ -16,6 +16,22 @@
     </description>
 
     <dependencies>
+        <!-- JPA -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <!-- fenix -->
+        <dependency>
+            <groupId>com.blinkfox</groupId>
+            <artifactId>fenix-spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- 分割 -->
+
+
+
 
         <!-- Spring框架基本的核心工具 -->
         <dependency>

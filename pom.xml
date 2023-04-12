@@ -8,9 +8,9 @@
     <artifactId>ruoyi</artifactId>
     <version>3.8.5</version>
 
-    <name>ruoyi</name>
+    <name>ruoyi-jpa</name>
     <url>http://www.ruoyi.vip</url>
-    <description>若依管理系统</description>
+    <description>若依管理系统JPA</description>
     
     <properties>
         <ruoyi.version>3.8.5</ruoyi.version>
@@ -31,9 +31,11 @@
         <poi.version>4.1.2</poi.version>
         <velocity.version>2.3</velocity.version>
         <jwt.version>0.9.1</jwt.version>
+        <fenix.version>2.7.0</fenix.version>
     </properties>
 
     <dependencies>
+        <!-- lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -143,6 +145,13 @@
                 <groupId>pro.fessional</groupId>
                 <artifactId>kaptcha</artifactId>
                 <version>${kaptcha.version}</version>
+            </dependency>
+
+            <!-- fenix for dynamic query -->
+            <dependency>
+                <groupId>com.blinkfox</groupId>
+                <artifactId>fenix-spring-boot-starter</artifactId>
+                <version>${fenix.version}</version>
             </dependency>
 
             <!-- 定时任务-->
