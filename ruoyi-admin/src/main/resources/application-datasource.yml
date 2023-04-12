@@ -6,7 +6,7 @@ spring:
       # 自动生成 表 和 字段
       ddl-auto: update
       naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
     # 打印SQL
     show-sql: true
     open-in-view: true
