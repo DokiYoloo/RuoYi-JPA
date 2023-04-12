@@ -11,7 +11,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import com.ruoyi.common.core.domain.ResponseEntity;
-import com.ruoyi.system.domain.dto.SysCacheDTO;
+import com.ruoyi.system.domain.dto.SysCacheInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.connection.RedisServerCommands;
 import org.springframework.data.redis.core.RedisCallback;
@@ -37,16 +37,16 @@ import com.ruoyi.common.utils.StringUtils;
 public class CacheController {
     private final RedisTemplate<String, String> redisTemplate;
 
-    private final static List<SysCacheDTO> caches = new ArrayList<>();
+    private final static List<SysCacheInfo> caches = new ArrayList<>();
 
     static {
-        caches.add(new SysCacheDTO(CacheConstants.LOGIN_TOKEN_KEY, "用户信息"));
-        caches.add(new SysCacheDTO(CacheConstants.SYS_CONFIG_KEY, "配置信息"));
-        caches.add(new SysCacheDTO(CacheConstants.SYS_DICT_KEY, "数据字典"));
-        caches.add(new SysCacheDTO(CacheConstants.CAPTCHA_CODE_KEY, "验证码"));
-        caches.add(new SysCacheDTO(CacheConstants.REPEAT_SUBMIT_KEY, "防重提交"));
-        caches.add(new SysCacheDTO(CacheConstants.RATE_LIMIT_KEY, "限流处理"));
-        caches.add(new SysCacheDTO(CacheConstants.PWD_ERR_CNT_KEY, "密码错误次数"));
+        caches.add(new SysCacheInfo(CacheConstants.LOGIN_TOKEN_KEY, "用户信息"));
+        caches.add(new SysCacheInfo(CacheConstants.SYS_CONFIG_KEY, "配置信息"));
+        caches.add(new SysCacheInfo(CacheConstants.SYS_DICT_KEY, "数据字典"));
+        caches.add(new SysCacheInfo(CacheConstants.CAPTCHA_CODE_KEY, "验证码"));
+        caches.add(new SysCacheInfo(CacheConstants.REPEAT_SUBMIT_KEY, "防重提交"));
+        caches.add(new SysCacheInfo(CacheConstants.RATE_LIMIT_KEY, "限流处理"));
+        caches.add(new SysCacheInfo(CacheConstants.PWD_ERR_CNT_KEY, "密码错误次数"));
     }
 
     @PreAuthorize("@ss.hasPermi('monitor:cache:list')")
@@ -80,7 +80,7 @@ public class CacheController {
 
     @PreAuthorize("@ss.hasPermi('monitor:cache:list')")
     @GetMapping("/getNames")
-    public ResponseEntity<List<SysCacheDTO>> cache() {
+    public ResponseEntity<List<SysCacheInfo>> cache() {
         return ResponseEntity.successful(caches);
     }
 
@@ -93,9 +93,9 @@ public class CacheController {
 
     @PreAuthorize("@ss.hasPermi('monitor:cache:list')")
     @GetMapping("/getValue/{cacheName}/{cacheKey}")
-    public ResponseEntity<SysCacheDTO> getCacheValue(@PathVariable String cacheName, @PathVariable String cacheKey) {
+    public ResponseEntity<SysCacheInfo> getCacheValue(@PathVariable String cacheName, @PathVariable String cacheKey) {
         String cacheValue = redisTemplate.opsForValue().get(cacheKey);
-        SysCacheDTO sysCache = new SysCacheDTO(cacheName, cacheKey, cacheValue);
+        SysCacheInfo sysCache = new SysCacheInfo(cacheName, cacheKey, cacheValue);
         return ResponseEntity.successful(sysCache);
     }
 
