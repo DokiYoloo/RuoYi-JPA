@@ -1,7 +1,7 @@
 package com.ruoyi.system.domain.dto;
 
 import com.ruoyi.common.annotation.Excel;
-import com.ruoyi.common.core.page.BasePage;
+import com.ruoyi.common.core.page.BasePageQuery;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -17,7 +17,7 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 @ToString
-public class SysConfigDTO extends BasePage {
+public class SysConfigDTO extends BasePageQuery {
 
     /**
      * 参数主键

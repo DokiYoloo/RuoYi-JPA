@@ -1,6 +1,7 @@
 package com.ruoyi.system.domain;
 
 import com.ruoyi.common.core.domain.BaseEntity;
+import com.ruoyi.common.core.domain.JpaBaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -23,7 +24,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Getter
 @Setter
 @ToString
-public class SysConfig extends BaseEntity {
+public class SysConfig extends JpaBaseEntity {
     private static final long serialVersionUID = 1L;
 
     /**

@@ -1,12 +1,16 @@
 package com.ruoyi.system.service.impl;
 
 import com.ruoyi.system.domain.SysLogininfor;
-import com.ruoyi.system.mapper.SysLogininforMapper;
+import com.ruoyi.system.domain.convertor.SysLogininforConvertor;
+import com.ruoyi.system.domain.dto.SysLogininforDTO;
+import com.ruoyi.system.repository.SysLogininforRepository;
 import com.ruoyi.system.service.ISysLogininforService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Arrays;
 
 /**
  * 系统访问日志情况信息 服务层处理
@@ -14,10 +18,9 @@ import java.util.List;
  * @author ruoyi
  */
 @Service
+@RequiredArgsConstructor
 public class SysLogininforServiceImpl implements ISysLogininforService {
-
-    @Autowired
-    private SysLogininforMapper logininforMapper;
+    private final SysLogininforRepository logininforRepo;
 
     /**
      * 新增系统登录日志
@@ -25,8 +28,9 @@ public class SysLogininforServiceImpl implements ISysLogininforService {
      * @param logininfor 访问日志对象
      */
     @Override
-    public void insertLogininfor(SysLogininfor logininfor) {
-        logininforMapper.insertLogininfor(logininfor);
+    public void insertLogininfor(SysLogininforDTO logininfor) {
+        SysLogininfor sysLogininfor = SysLogininforConvertor.toPO(logininfor);
+        logininforRepo.save(sysLogininfor);
     }
 
     /**
@@ -36,19 +40,19 @@ public class SysLogininforServiceImpl implements ISysLogininforService {
      * @return 登录记录集合
      */
     @Override
-    public List<SysLogininfor> selectLogininforList(SysLogininfor logininfor) {
-        return logininforMapper.selectLogininforList(logininfor);
+    public Page<SysLogininfor> selectLogininforList(SysLogininforDTO logininfor) {
+        Pageable pageable = logininfor.buildPageable();
+        return logininforRepo.findPaged(logininfor, pageable);
     }
 
     /**
      * 批量删除系统登录日志
      *
      * @param infoIds 需要删除的登录日志ID
-     * @return 结果
      */
     @Override
-    public int deleteLogininforByIds(Long[] infoIds) {
-        return logininforMapper.deleteLogininforByIds(infoIds);
+    public void deleteLogininforByIds(Long[] infoIds) {
+        logininforRepo.deleteAllById(Arrays.asList(infoIds));
     }
 
     /**
@@ -56,6 +60,6 @@ public class SysLogininforServiceImpl implements ISysLogininforService {
      */
     @Override
     public void cleanLogininfor() {
-        logininforMapper.cleanLogininfor();
+        logininforRepo.deleteAll();
     }
 }

@@ -5,7 +5,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import com.ruoyi.common.core.domain.ResponseEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,14 +35,14 @@ import com.ruoyi.system.service.ISysUserOnlineService;
 @RequiredArgsConstructor
 @RequestMapping("/monitor/online")
 public class SysUserOnlineController extends BaseController {
-    private ISysUserOnlineService userOnlineService;
-    private RedisCache redisCache;
+    private final ISysUserOnlineService userOnlineService;
+    private final RedisCache redisCache;
 
     @PreAuthorize("@ss.hasPermi('monitor:online:list')")
     @GetMapping("/list")
-    public TableDataInfo list(String ipaddr, String userName) {
+    public TableDataInfo<SysUserOnline> list(String ipaddr, String userName) {
         Collection<String> keys = redisCache.keys(CacheConstants.LOGIN_TOKEN_KEY + "*");
-        List<SysUserOnline> userOnlineList = new ArrayList<SysUserOnline>();
+        List<SysUserOnline> userOnlineList = new ArrayList<>();
         for (String key : keys) {
             LoginUser user = redisCache.getCacheObject(key);
             if (StringUtils.isNotEmpty(ipaddr) && StringUtils.isNotEmpty(userName)) {
@@ -55,7 +57,7 @@ public class SysUserOnlineController extends BaseController {
         }
         Collections.reverse(userOnlineList);
         userOnlineList.removeAll(Collections.singleton(null));
-        return getDataTable(userOnlineList);
+        return getDataTable(new PageImpl<>(userOnlineList));
     }
 
     /**
@@ -64,8 +66,7 @@ public class SysUserOnlineController extends BaseController {
     @PreAuthorize("@ss.hasPermi('monitor:online:forceLogout')")
     @Log(title = "在线用户", businessType = BusinessType.FORCE)
     @DeleteMapping("/{tokenId}")
-    public AjaxResult forceLogout(@PathVariable String tokenId) {
-        redisCache.deleteObject(CacheConstants.LOGIN_TOKEN_KEY + tokenId);
-        return success();
+    public ResponseEntity<Void> forceLogout(@PathVariable String tokenId) {
+        return ResponseEntity.deduce(() -> redisCache.deleteObject(CacheConstants.LOGIN_TOKEN_KEY + tokenId));
     }
 }

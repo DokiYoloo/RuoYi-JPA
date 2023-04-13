@@ -1,19 +1,20 @@
 package com.ruoyi.system.domain;
 
 import com.ruoyi.common.core.domain.BaseEntity;
-import com.ruoyi.common.xss.Xss;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import com.ruoyi.common.core.domain.JpaBaseEntity;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 通知公告表 sys_notice
  *
  * @author ruoyi
  */
-public class SysNotice extends BaseEntity {
+@Getter
+@Setter
+@ToString
+public class SysNotice extends JpaBaseEntity {
     private static final long serialVersionUID = 1L;
 
     /**

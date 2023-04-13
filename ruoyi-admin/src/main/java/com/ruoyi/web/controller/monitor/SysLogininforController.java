@@ -4,7 +4,10 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.core.domain.ResponseEntity;
+import com.ruoyi.system.domain.convertor.SysLogininforConvertor;
+import com.ruoyi.system.domain.dto.SysLogininforDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,18 +38,18 @@ public class SysLogininforController extends BaseController {
 
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysLogininfor logininfor) {
-        startPage();
-        List<SysLogininfor> list = logininforService.selectLogininforList(logininfor);
-        return getDataTable(list);
+    public TableDataInfo<SysLogininforDTO> list(SysLogininforDTO logininfor) {
+        Page<SysLogininfor> paged = logininforService.selectLogininforList(logininfor);
+        return getDataTable(paged.map(SysLogininforConvertor::toDTO));
     }
 
     @Log(title = "登录日志", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:export')")
     @PostMapping("/export")
-    public void export(HttpServletResponse response, SysLogininfor logininfor) {
-        List<SysLogininfor> list = logininforService.selectLogininforList(logininfor);
-        ExcelUtil<SysLogininfor> util = new ExcelUtil<>(SysLogininfor.class);
+    public void export(HttpServletResponse response, SysLogininforDTO logininfor) {
+        List<SysLogininforDTO> list = logininforService.selectLogininforList(logininfor)
+                .map(SysLogininforConvertor::toDTO).getContent();
+        ExcelUtil<SysLogininforDTO> util = new ExcelUtil<>(SysLogininforDTO.class);
         util.exportExcel(response, list, "登录日志");
     }
 

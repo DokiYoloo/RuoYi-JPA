@@ -13,6 +13,7 @@ import java.util.Map;
 
 /**
  * Entity基类
+ * 在这个版本中 BaseEntity 将作为所有非PO的基类
  *
  * @author ruoyi
  */

@@ -1,5 +1,6 @@
 package com.ruoyi.common.core.page;
 
+import com.ruoyi.common.core.domain.BaseEntity;
 import com.ruoyi.common.utils.StringUtils;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ import org.springframework.data.domain.Sort;
 @Setter
 @RequiredArgsConstructor
 @ToString
-public class BasePage {
+public class BasePageQuery extends BaseEntity {
 
     /**
      * 当前记录起始索引

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fenixs namespace="com.ruoyi.system.repository.SysLogininforRepository">
+
+    <fenix id="findPaged">
+        from SysLogininfor where 1 = 1
+        <andLike match="logininfor.ipaddr != empty" field="ipaddr" value="logininfor.ipaddr"/>
+        <andEqual match="logininfor.status != empty" field="status" value="logininfor.status"/>
+        <andLike match="logininfor.userName != empty" field="userName" value="logininfor.userName"/>
+
+        <!-- 开始时间检索 -->
+        @if{logininfor.?params.beginTime != empty}
+        and DATE(createTime) &gt;= DATE(#{config.beginTime})
+        @end{}
+
+        <!-- 结束时间检索 -->
+        @if{?logininfor.?params.endTime != empty}
+        and DATE(createTime) &lt;= DATE(#{config.endTime})
+        @end{}
+
+        order by infoId desc
+    </fenix>
+
+</fenixs>
