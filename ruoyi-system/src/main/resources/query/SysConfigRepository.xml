@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fenixs namespace="com.ruoyi.system.repository.SysConfigRepository">
+
+    <fenix id="findConfigPaged">
+        from SysConfig where 1 = 1
+        <andLike match="config.configName != empty" field="configName" value="config.configName"/>
+        <andLike match="config.configKey != empty" field="configKey" value="config.configKey"/>
+        <andEqual match="config.configType != empty" field="configType" value="config.configType"/>
+
+        <!-- 开始时间检索 -->
+        @if{?config.beginTime != empty}
+        and DATE(createTime) &gt;= DATE(#{config.beginTime})
+        @end{}
+
+        <!-- 结束时间检索 -->
+        @if{?config.endTime != empty}
+        and DATE(createTime) &lt;= DATE(#{config.endTime})
+        @end{}
+    </fenix>
+
+</fenixs>

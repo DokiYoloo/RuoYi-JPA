@@ -1,10 +1,14 @@
 package com.ruoyi.web.controller.system;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.core.domain.ResponseEntity;
+import com.ruoyi.system.domain.convertor.SysConfigConvertor;
+import com.ruoyi.system.domain.dto.SysConfigDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
@@ -40,18 +43,19 @@ public class SysConfigController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:config:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysConfig config) {
-        startPage();
-        List<SysConfig> list = configService.selectConfigList(config);
-        return getDataTable(list);
+    public TableDataInfo<SysConfigDTO> list(SysConfigDTO config) {
+        Page<SysConfig> page = configService.selectConfigPaged(config);
+        return getDataTable(page.map(SysConfigConvertor::toDTO));
     }
 
     @Log(title = "参数管理", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:config:export')")
     @PostMapping("/export")
-    public void export(HttpServletResponse response, SysConfig config) {
-        List<SysConfig> list = configService.selectConfigList(config);
-        ExcelUtil<SysConfig> util = new ExcelUtil<SysConfig>(SysConfig.class);
+    public void export(HttpServletResponse response, SysConfigDTO config) {
+        List<SysConfigDTO> list = configService.selectConfigPaged(config)
+                .stream().map(SysConfigConvertor::toDTO)
+                .collect(Collectors.toList());
+        ExcelUtil<SysConfigDTO> util = new ExcelUtil<>(SysConfigDTO.class);
         util.exportExcel(response, list, "参数数据");
     }
 
@@ -60,16 +64,20 @@ public class SysConfigController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:config:query')")
     @GetMapping(value = "/{configId}")
-    public AjaxResult getInfo(@PathVariable Long configId) {
-        return success(configService.selectConfigById(configId));
+    public ResponseEntity<SysConfigDTO> getInfo(@PathVariable Long configId) {
+        SysConfig sysConfig = configService.selectConfigById(configId);
+        if (sysConfig == null) {
+            return ResponseEntity.failedResponse("配置不存在");
+        }
+        return ResponseEntity.successful(SysConfigConvertor.toDTO(sysConfig));
     }
 
     /**
      * 根据参数键名查询参数值
      */
     @GetMapping(value = "/configKey/{configKey}")
-    public AjaxResult getConfigKey(@PathVariable String configKey) {
-        return success(configService.selectConfigByKey(configKey));
+    public ResponseEntity<String> getConfigKey(@PathVariable String configKey) {
+        return ResponseEntity.successful(configService.selectConfigByKey(configKey));
     }
 
     /**
@@ -78,12 +86,11 @@ public class SysConfigController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:config:add')")
     @Log(title = "参数管理", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@Validated @RequestBody SysConfig config) {
+    public ResponseEntity<Void> add(@Validated @RequestBody SysConfigDTO config) {
         if (!configService.checkConfigKeyUnique(config)) {
-            return error("新增参数'" + config.getConfigName() + "'失败，参数键名已存在");
+            return ResponseEntity.failedResponse("新增参数'" + config.getConfigName() + "'失败，参数键名已存在");
         }
-        config.setCreateBy(getUsername());
-        return toAjax(configService.insertConfig(config));
+        return ResponseEntity.deduce(() -> configService.insertConfig(config));
     }
 
     /**
@@ -92,12 +99,14 @@ public class SysConfigController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:config:edit')")
     @Log(title = "参数管理", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@Validated @RequestBody SysConfig config) {
-        if (!configService.checkConfigKeyUnique(config)) {
-            return error("修改参数'" + config.getConfigName() + "'失败，参数键名已存在");
+    public ResponseEntity<Void> edit(@Validated @RequestBody SysConfigDTO config) {
+        if (config.getConfigId() == null) {
+            return ResponseEntity.failedResponse("配置不存在");
         }
-        config.setUpdateBy(getUsername());
-        return toAjax(configService.updateConfig(config));
+        if (!configService.checkConfigKeyUnique(config)) {
+            return ResponseEntity.failedResponse("修改参数'" + config.getConfigName() + "'失败，参数键名已存在");
+        }
+        return ResponseEntity.deduce(() -> configService.updateConfig(config));
     }
 
     /**
@@ -106,9 +115,8 @@ public class SysConfigController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:config:remove')")
     @Log(title = "参数管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/{configIds}")
-    public AjaxResult remove(@PathVariable Long[] configIds) {
-        configService.deleteConfigByIds(configIds);
-        return success();
+    public ResponseEntity<Void> remove(@PathVariable Long[] configIds) {
+        return ResponseEntity.deduce(() -> configService.deleteConfigByIds(configIds));
     }
 
     /**
@@ -117,8 +125,7 @@ public class SysConfigController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:config:remove')")
     @Log(title = "参数管理", businessType = BusinessType.CLEAN)
     @DeleteMapping("/refreshCache")
-    public AjaxResult refreshCache() {
-        configService.resetConfigCache();
-        return success();
+    public ResponseEntity<Void> refreshCache() {
+        return ResponseEntity.deduce(configService::resetConfigCache);
     }
 }

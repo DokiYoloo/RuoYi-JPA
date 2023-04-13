@@ -9,14 +9,20 @@ import com.ruoyi.common.enums.DataSourceType;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysConfig;
-import com.ruoyi.system.mapper.SysConfigMapper;
+import com.ruoyi.system.domain.convertor.SysConfigConvertor;
+import com.ruoyi.system.domain.dto.SysConfigDTO;
+import com.ruoyi.system.repository.SysConfigRepository;
 import com.ruoyi.system.service.ISysConfigService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.Collection;
 import java.util.List;
+
+import static com.ruoyi.common.utils.SecurityUtils.getUsername;
 
 /**
  * 参数配置 服务层实现
@@ -24,12 +30,10 @@ import java.util.List;
  * @author ruoyi
  */
 @Service
+@RequiredArgsConstructor
 public class SysConfigServiceImpl implements ISysConfigService {
-    @Autowired
-    private SysConfigMapper configMapper;
-
-    @Autowired
-    private RedisCache redisCache;
+    private final RedisCache redisCache;
+    private final SysConfigRepository sysConfigRepo;
 
     /**
      * 项目启动时，初始化参数到缓存
@@ -48,9 +52,10 @@ public class SysConfigServiceImpl implements ISysConfigService {
     @Override
     @DataSource(DataSourceType.MASTER)
     public SysConfig selectConfigById(Long configId) {
-        SysConfig config = new SysConfig();
-        config.setConfigId(configId);
-        return configMapper.selectConfig(config);
+        if (configId == null) {
+            return null;
+        }
+        return sysConfigRepo.findById(configId).orElse(null);
     }
 
     /**
@@ -65,9 +70,7 @@ public class SysConfigServiceImpl implements ISysConfigService {
         if (StringUtils.isNotEmpty(configValue)) {
             return configValue;
         }
-        SysConfig config = new SysConfig();
-        config.setConfigKey(configKey);
-        SysConfig retConfig = configMapper.selectConfig(config);
+        SysConfig retConfig = sysConfigRepo.findByKey(configKey);
         if (StringUtils.isNotNull(retConfig)) {
             redisCache.setCacheObject(getCacheKey(configKey), retConfig.getConfigValue());
             return retConfig.getConfigValue();
@@ -96,23 +99,23 @@ public class SysConfigServiceImpl implements ISysConfigService {
      * @return 参数配置集合
      */
     @Override
-    public List<SysConfig> selectConfigList(SysConfig config) {
-        return configMapper.selectConfigList(config);
+    public Page<SysConfig> selectConfigPaged(SysConfigDTO config) {
+        Pageable pageable = config.buildPageable();
+        return sysConfigRepo.findConfigPaged(config, pageable);
     }
 
     /**
      * 新增参数配置
      *
      * @param config 参数配置信息
-     * @return 结果
      */
     @Override
-    public int insertConfig(SysConfig config) {
-        int row = configMapper.insertConfig(config);
-        if (row > 0) {
-            redisCache.setCacheObject(getCacheKey(config.getConfigKey()), config.getConfigValue());
-        }
-        return row;
+    public void insertConfig(SysConfigDTO config) {
+        SysConfig sysConfig = SysConfigConvertor.toPO(config);
+        sysConfig.setCreateBy(getUsername());
+        sysConfigRepo.save(sysConfig);
+        // TODO use NewEntityCallback
+        redisCache.setCacheObject(getCacheKey(config.getConfigKey()), config.getConfigValue());
     }
 
     /**
@@ -122,17 +125,14 @@ public class SysConfigServiceImpl implements ISysConfigService {
      * @return 结果
      */
     @Override
-    public int updateConfig(SysConfig config) {
-        SysConfig temp = configMapper.selectConfigById(config.getConfigId());
+    public void updateConfig(SysConfigDTO config) {
+        SysConfig temp = selectConfigById(config.getConfigId());
         if (!StringUtils.equals(temp.getConfigKey(), config.getConfigKey())) {
             redisCache.deleteObject(getCacheKey(temp.getConfigKey()));
         }
 
-        int row = configMapper.updateConfig(config);
-        if (row > 0) {
-            redisCache.setCacheObject(getCacheKey(config.getConfigKey()), config.getConfigValue());
-        }
-        return row;
+        sysConfigRepo.save(temp);
+        redisCache.setCacheObject(getCacheKey(config.getConfigKey()), config.getConfigValue());
     }
 
     /**
@@ -147,7 +147,7 @@ public class SysConfigServiceImpl implements ISysConfigService {
             if (StringUtils.equals(UserConstants.YES, config.getConfigType())) {
                 throw new ServiceException(String.format("内置参数【%1$s】不能删除 ", config.getConfigKey()));
             }
-            configMapper.deleteConfigById(configId);
+            sysConfigRepo.deleteById(configId);
             redisCache.deleteObject(getCacheKey(config.getConfigKey()));
         }
     }
@@ -157,7 +157,7 @@ public class SysConfigServiceImpl implements ISysConfigService {
      */
     @Override
     public void loadingConfigCache() {
-        List<SysConfig> configsList = configMapper.selectConfigList(new SysConfig());
+        List<SysConfig> configsList = sysConfigRepo.findAll();
         for (SysConfig config : configsList) {
             redisCache.setCacheObject(getCacheKey(config.getConfigKey()), config.getConfigValue());
         }
@@ -188,10 +188,10 @@ public class SysConfigServiceImpl implements ISysConfigService {
      * @return 结果
      */
     @Override
-    public boolean checkConfigKeyUnique(SysConfig config) {
-        Long configId = StringUtils.isNull(config.getConfigId()) ? -1L : config.getConfigId();
-        SysConfig info = configMapper.checkConfigKeyUnique(config.getConfigKey());
-        if (StringUtils.isNotNull(info) && info.getConfigId().longValue() != configId.longValue()) {
+    public boolean checkConfigKeyUnique(SysConfigDTO config) {
+        long configId = StringUtils.isNull(config.getConfigId()) ? -1L : config.getConfigId();
+        SysConfig info = sysConfigRepo.findByKey(config.getConfigKey());
+        if (StringUtils.isNotNull(info) && info.getConfigId() != configId) {
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;

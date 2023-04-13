@@ -72,7 +72,7 @@ spring:
 
 fenix:
   debug: false
-  xml-locations: classpath*:mapper
+  xml-locations: classpath*:query
   print-banner: false
   print-sql: ${spring.jpa.show-sql}
   show-jpa-sql: ${spring.jpa.show-sql}
