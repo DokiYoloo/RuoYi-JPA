@@ -1,10 +1,14 @@
 package com.ruoyi.web.controller.system;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.core.domain.ResponseEntity;
+import com.ruoyi.system.domain.convertor.SysPostConvertor;
+import com.ruoyi.system.domain.dto.SysPostDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
@@ -40,19 +43,19 @@ public class SysPostController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:post:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysPost post) {
-        startPage();
-        List<SysPost> list = postService.selectPostList(post);
-        return getDataTable(list);
+    public TableDataInfo<SysPostDTO> list(SysPostDTO post) {
+        Page<SysPost> paged = postService.selectPostPaged(post);
+        return getDataTable(paged.map(SysPostConvertor::toDTO));
     }
 
     @Log(title = "岗位管理", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:post:export')")
     @PostMapping("/export")
-    public void export(HttpServletResponse response, SysPost post) {
-        List<SysPost> list = postService.selectPostList(post);
-        ExcelUtil<SysPost> util = new ExcelUtil<SysPost>(SysPost.class);
-        util.exportExcel(response, list, "岗位数据");
+    public void export(HttpServletResponse response, SysPostDTO post) {
+        Page<SysPostDTO> paged = postService.selectPostPaged(post)
+                .map(SysPostConvertor::toDTO);
+        ExcelUtil<SysPostDTO> util = new ExcelUtil<>(SysPostDTO.class);
+        util.exportExcel(response, paged.getContent(), "岗位数据");
     }
 
     /**
@@ -60,8 +63,9 @@ public class SysPostController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:post:query')")
     @GetMapping(value = "/{postId}")
-    public AjaxResult getInfo(@PathVariable Long postId) {
-        return success(postService.selectPostById(postId));
+    public ResponseEntity<SysPostDTO> getInfo(@PathVariable Long postId) {
+        SysPost sysPost = postService.selectPostById(postId);
+        return ResponseEntity.successful(SysPostConvertor.toDTO(sysPost));
     }
 
     /**
@@ -70,14 +74,13 @@ public class SysPostController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:post:add')")
     @Log(title = "岗位管理", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@Validated @RequestBody SysPost post) {
+    public ResponseEntity<Void> add(@Validated @RequestBody SysPostDTO post) {
         if (!postService.checkPostNameUnique(post)) {
-            return error("新增岗位'" + post.getPostName() + "'失败，岗位名称已存在");
+            return ResponseEntity.failed("新增岗位'" + post.getPostName() + "'失败，岗位名称已存在");
         } else if (!postService.checkPostCodeUnique(post)) {
-            return error("新增岗位'" + post.getPostName() + "'失败，岗位编码已存在");
+            return ResponseEntity.failed("新增岗位'" + post.getPostName() + "'失败，岗位编码已存在");
         }
-        post.setCreateBy(getUsername());
-        return toAjax(postService.insertPost(post));
+        return ResponseEntity.deduce(() -> postService.insertPost(post));
     }
 
     /**
@@ -86,14 +89,13 @@ public class SysPostController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:post:edit')")
     @Log(title = "岗位管理", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@Validated @RequestBody SysPost post) {
+    public ResponseEntity<Void> edit(@Validated @RequestBody SysPostDTO post) {
         if (!postService.checkPostNameUnique(post)) {
-            return error("修改岗位'" + post.getPostName() + "'失败，岗位名称已存在");
+            return ResponseEntity.failed("修改岗位'" + post.getPostName() + "'失败，岗位名称已存在");
         } else if (!postService.checkPostCodeUnique(post)) {
-            return error("修改岗位'" + post.getPostName() + "'失败，岗位编码已存在");
+            return ResponseEntity.failed("修改岗位'" + post.getPostName() + "'失败，岗位编码已存在");
         }
-        post.setUpdateBy(getUsername());
-        return toAjax(postService.updatePost(post));
+        return ResponseEntity.deduce(() -> postService.updatePost(post));
     }
 
     /**
@@ -102,16 +104,18 @@ public class SysPostController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:post:remove')")
     @Log(title = "岗位管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/{postIds}")
-    public AjaxResult remove(@PathVariable Long[] postIds) {
-        return toAjax(postService.deletePostByIds(postIds));
+    public ResponseEntity<Void> remove(@PathVariable Long[] postIds) {
+        return ResponseEntity.deduce(() -> postService.deletePostByIds(postIds));
     }
 
     /**
      * 获取岗位选择框列表
      */
     @GetMapping("/optionselect")
-    public AjaxResult optionselect() {
-        List<SysPost> posts = postService.selectPostAll();
-        return success(posts);
+    public ResponseEntity<List<SysPostDTO>> optionselect() {
+        List<SysPostDTO> posts = postService.selectPostAll()
+                .stream().map(SysPostConvertor::toDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.successful(posts);
     }
 }

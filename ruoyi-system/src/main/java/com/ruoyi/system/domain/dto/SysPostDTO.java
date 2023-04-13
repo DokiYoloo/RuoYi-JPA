@@ -3,6 +3,7 @@ package com.ruoyi.system.domain.dto;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.annotation.Excel.ColumnType;
 import com.ruoyi.common.core.domain.BaseEntity;
+import com.ruoyi.common.core.page.BasePageQuery;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -19,7 +20,7 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 @ToString
-public class SysPostDTO extends BaseEntity {
+public class SysPostDTO extends BasePageQuery {
 
     /**
      * 岗位序号

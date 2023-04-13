@@ -1,62 +1,69 @@
 package com.ruoyi.system.domain;
 
-import com.ruoyi.common.annotation.Excel;
-import com.ruoyi.common.annotation.Excel.ColumnType;
-import com.ruoyi.common.core.domain.BaseEntity;
+import com.ruoyi.common.core.domain.JpaBaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import static javax.persistence.GenerationType.IDENTITY;
 
 /**
  * 岗位表 sys_post
  *
  * @author ruoyi
  */
+@Table
+@Entity
 @Getter
 @Setter
 @ToString
-public class SysPost extends BaseEntity {
+public class SysPost extends JpaBaseEntity {
     private static final long serialVersionUID = 1L;
 
     /**
      * 岗位序号
      */
-    @Excel(name = "岗位序号", cellType = ColumnType.NUMERIC)
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(unique = true, nullable = false)
     private Long postId;
 
     /**
      * 岗位编码
      */
-    @Excel(name = "岗位编码")
+    @Column(length = 64)
     private String postCode;
 
     /**
      * 岗位名称
      */
-    @Excel(name = "岗位名称")
+    @Column(length = 50)
     private String postName;
 
     /**
      * 岗位排序
      */
-    @Excel(name = "岗位排序")
+    @Column
     private Integer postSort;
 
     /**
      * 状态（0正常 1停用）
      */
-    @Excel(name = "状态", readConverterExp = "0=正常,1=停用")
+    @Column(length = 2)
     private String status;
 
     /**
+     * TODO
      * 用户是否存在此岗位标识 默认不存在
      */
+    @Transient
     private boolean flag = false;
 
 }

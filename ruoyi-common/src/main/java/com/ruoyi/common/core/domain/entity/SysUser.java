@@ -5,14 +5,24 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.Date;
 import java.util.List;
+
+import static javax.persistence.GenerationType.IDENTITY;
 
 /**
  * 用户对象 sys_user
  *
  * @author ruoyi
  */
+@Table
+@Entity
 @Getter
 @Setter
 @ToString
@@ -22,6 +32,9 @@ public class SysUser extends BaseEntity {
     /**
      * 用户ID
      */
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(unique = true, nullable = false)
     private Long userId;
 
     /**
@@ -92,16 +105,22 @@ public class SysUser extends BaseEntity {
     /**
      * 角色对象
      */
+    @Deprecated
+    @Transient
     private List<SysRole> roles;
 
     /**
      * 角色组
      */
+    @Deprecated
+    @Transient
     private Long[] roleIds;
 
     /**
      * 岗位组
      */
+    @Deprecated
+    @Transient
     private Long[] postIds;
 
     /**
@@ -115,6 +134,14 @@ public class SysUser extends BaseEntity {
 
     public SysUser(Long userId) {
         this.userId = userId;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin(this.userId);
+    }
+
+    public static boolean isAdmin(Long userId) {
+        return userId != null && 1L == userId;
     }
 
 }

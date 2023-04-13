@@ -17,6 +17,7 @@ import com.ruoyi.system.mapper.SysRoleMapper;
 import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.system.mapper.SysUserPostMapper;
 import com.ruoyi.system.mapper.SysUserRoleMapper;
+import com.ruoyi.system.repository.SysPostRepository;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysUserService;
 import org.slf4j.Logger;
@@ -47,7 +48,7 @@ public class SysUserServiceImpl implements ISysUserService {
     private SysRoleMapper roleMapper;
 
     @Autowired
-    private SysPostMapper postMapper;
+    private SysPostRepository sysPostRepo;
 
     @Autowired
     private SysUserRoleMapper userRoleMapper;
@@ -142,7 +143,7 @@ public class SysUserServiceImpl implements ISysUserService {
      */
     @Override
     public String selectUserPostGroup(String userName) {
-        List<SysPost> list = postMapper.selectPostsByUserName(userName);
+        List<SysPost> list = sysPostRepo.findByUserName(userName);
         if (CollectionUtils.isEmpty(list)) {
             return StringUtils.EMPTY;
         }
