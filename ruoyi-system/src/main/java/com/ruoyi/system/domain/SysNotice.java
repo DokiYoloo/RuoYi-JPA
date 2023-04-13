@@ -5,11 +5,16 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 /**
  * 通知公告表 sys_notice
  *
  * @author ruoyi
  */
+@Table
+@Entity
 @Getter
 @Setter
 @ToString

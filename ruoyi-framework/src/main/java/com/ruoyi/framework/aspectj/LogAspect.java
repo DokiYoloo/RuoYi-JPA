@@ -12,7 +12,7 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.ip.IpUtils;
 import com.ruoyi.framework.manager.AsyncManager;
 import com.ruoyi.framework.manager.factory.AsyncFactory;
-import com.ruoyi.system.domain.SysOperLog;
+import com.ruoyi.system.domain.dto.SysOperLogDTO;
 import org.apache.commons.lang3.ArrayUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -86,7 +86,7 @@ public class LogAspect {
             LoginUser loginUser = SecurityUtils.getLoginUser();
 
             // *========数据库日志=========*//
-            SysOperLog operLog = new SysOperLog();
+            SysOperLogDTO operLog = new SysOperLogDTO();
             operLog.setStatus(BusinessStatus.SUCCESS.ordinal());
             // 请求的地址
             String ip = IpUtils.getIpAddr();
@@ -128,7 +128,7 @@ public class LogAspect {
      * @param operLog 操作日志
      * @throws Exception
      */
-    public void getControllerMethodDescription(JoinPoint joinPoint, Log log, SysOperLog operLog, Object jsonResult) throws Exception {
+    public void getControllerMethodDescription(JoinPoint joinPoint, Log log, SysOperLogDTO operLog, Object jsonResult) throws Exception {
         // 设置action动作
         operLog.setBusinessType(log.businessType().ordinal());
         // 设置标题
@@ -152,7 +152,7 @@ public class LogAspect {
      * @param operLog 操作日志
      * @throws Exception 异常
      */
-    private void setRequestValue(JoinPoint joinPoint, SysOperLog operLog, String[] excludeParamNames) throws Exception {
+    private void setRequestValue(JoinPoint joinPoint, SysOperLogDTO operLog, String[] excludeParamNames) throws Exception {
         Map<?, ?> paramsMap = ServletUtils.getParamMap(ServletUtils.getRequest());
         String requestMethod = operLog.getRequestMethod();
         if (StringUtils.isEmpty(paramsMap)
@@ -168,19 +168,19 @@ public class LogAspect {
      * 参数拼装
      */
     private String argsArrayToString(Object[] paramsArray, String[] excludeParamNames) {
-        String params = "";
+        StringBuilder params = new StringBuilder();
         if (paramsArray != null && paramsArray.length > 0) {
             for (Object o : paramsArray) {
                 if (StringUtils.isNotNull(o) && !isFilterObject(o)) {
                     try {
                         String jsonObj = JSON.toJSONString(o, excludePropertyPreFilter(excludeParamNames));
-                        params += jsonObj.toString() + " ";
-                    } catch (Exception e) {
+                        params.append(jsonObj).append(" ");
+                    } catch (Exception ignored) {
                     }
                 }
             }
         }
-        return params.trim();
+        return params.toString().trim();
     }
 
     /**

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fenixs namespace="com.ruoyi.system.repository.SysOperLogRepository">
+
+    <fenix id="findPaged">
+        from SysNotice where 1 = 1
+        <andLike match="operLog.title != empty" field="title" value="operLog.title"/>
+        <andEqual match="operLog.businessType != empty" field="businessType" value="operLog.businessType"/>
+        <andEqual match="operLog.status != empty" field="status" value="operLog.status"/>
+        <andLike match="operLog.operName != empty" field="operName" value="operLog.operName"/>
+
+        @if{operLog.businessTypes != empty and operLog.businessTypes.size() > 0}
+        and businessType in #{operLog.businessTypes}
+        @end{}
+
+        <!-- 开始时间检索 -->
+        @if{operLog.?params.beginTime != empty}
+        and DATE(operTime) &gt;= DATE(#{operLog.params.beginTime})
+        @end{}
+
+        <!-- 结束时间检索 -->
+        @if{?operLog.?params.endTime != empty}
+        and DATE(operTime) &lt;= DATE(#{operLog.params.endTime})
+        @end{}
+
+        order by operId desc
+    </fenix>
+
+</fenixs>

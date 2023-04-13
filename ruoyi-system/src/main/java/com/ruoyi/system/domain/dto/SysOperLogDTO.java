@@ -3,7 +3,7 @@ package com.ruoyi.system.domain.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.annotation.Excel.ColumnType;
-import com.ruoyi.common.core.domain.BaseEntity;
+import com.ruoyi.common.core.page.BasePageQuery;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,7 +16,7 @@ import java.util.Date;
  */
 @Getter
 @Setter
-public class SysOperLogDTO extends BaseEntity {
+public class SysOperLogDTO extends BasePageQuery {
 
     /**
      * 日志主键

@@ -8,13 +8,13 @@
         <andEqual match="config.configType != empty" field="configType" value="config.configType"/>
 
         <!-- 开始时间检索 -->
-        @if{?config.params.beginTime != empty}
-        and DATE(createTime) &gt;= DATE(#{config.beginTime})
+        @if{config.?params.beginTime != empty}
+        and DATE(createTime) &gt;= DATE(#{config.params.beginTime})
         @end{}
 
         <!-- 结束时间检索 -->
-        @if{?config.params.endTime != empty}
-        and DATE(createTime) &lt;= DATE(#{config.endTime})
+        @if{?config.?params.endTime != empty}
+        and DATE(createTime) &lt;= DATE(#{config.params.endTime})
         @end{}
     </fenix>
 

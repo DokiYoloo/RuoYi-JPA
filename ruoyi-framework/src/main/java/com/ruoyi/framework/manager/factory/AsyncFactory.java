@@ -7,9 +7,8 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.ip.AddressUtils;
 import com.ruoyi.common.utils.ip.IpUtils;
 import com.ruoyi.common.utils.spring.SpringUtils;
-import com.ruoyi.system.domain.SysLogininfor;
-import com.ruoyi.system.domain.SysOperLog;
 import com.ruoyi.system.domain.dto.SysLogininforDTO;
+import com.ruoyi.system.domain.dto.SysOperLogDTO;
 import com.ruoyi.system.service.ISysLogininforService;
 import com.ruoyi.system.service.ISysOperLogService;
 import eu.bitwalker.useragentutils.UserAgent;
@@ -81,7 +80,7 @@ public class AsyncFactory {
      * @param operLog 操作日志信息
      * @return 任务task
      */
-    public static TimerTask recordOper(final SysOperLog operLog) {
+    public static TimerTask recordOper(final SysOperLogDTO operLog) {
         return new TimerTask() {
             @Override
             public void run() {
