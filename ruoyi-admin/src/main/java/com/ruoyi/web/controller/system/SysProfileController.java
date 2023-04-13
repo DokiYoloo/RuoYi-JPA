@@ -1,7 +1,7 @@
 package com.ruoyi.web.controller.system;
 
+import com.ruoyi.common.core.domain.entity.dto.SysUserDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -42,7 +42,7 @@ public class SysProfileController extends BaseController {
     @GetMapping
     public AjaxResult profile() {
         LoginUser loginUser = getLoginUser();
-        SysUser user = loginUser.getUser();
+        SysUserDTO user = loginUser.getUser();
         AjaxResult ajax = AjaxResult.success(user);
         ajax.put("roleGroup", userService.selectUserRoleGroup(loginUser.getUsername()));
         ajax.put("postGroup", userService.selectUserPostGroup(loginUser.getUsername()));
@@ -56,7 +56,7 @@ public class SysProfileController extends BaseController {
     @PutMapping
     public AjaxResult updateProfile(@RequestBody SysUser user) {
         LoginUser loginUser = getLoginUser();
-        SysUser sysUser = loginUser.getUser();
+        SysUserDTO sysUser = loginUser.getUser();
         user.setUserName(sysUser.getUserName());
         if (StringUtils.isNotEmpty(user.getPhonenumber()) && !userService.checkPhoneUnique(user)) {
             return error("修改用户'" + user.getUserName() + "'失败，手机号码已存在");

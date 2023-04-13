@@ -2,6 +2,7 @@ package com.ruoyi.common.core.domain.model;
 
 import com.alibaba.fastjson2.annotation.JSONField;
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.entity.dto.SysUserDTO;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -73,17 +74,21 @@ public class LoginUser implements UserDetails {
     /**
      * 用户信息
      */
-    private SysUser user;
+    private SysUserDTO user;
+
+    public SysUserDTO getUser() {
+        return user;
+    }
 
     public LoginUser() {
     }
 
-    public LoginUser(SysUser user, Set<String> permissions) {
+    public LoginUser(SysUserDTO user, Set<String> permissions) {
         this.user = user;
         this.permissions = permissions;
     }
 
-    public LoginUser(Long userId, Long deptId, SysUser user, Set<String> permissions) {
+    public LoginUser(Long userId, Long deptId, SysUserDTO user, Set<String> permissions) {
         this.userId = userId;
         this.deptId = deptId;
         this.user = user;

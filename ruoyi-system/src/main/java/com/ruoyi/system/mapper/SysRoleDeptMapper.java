@@ -1,6 +1,6 @@
 package com.ruoyi.system.mapper;
 
-import com.ruoyi.system.domain.SysRoleDept;
+import com.ruoyi.system.domain.dto.SysRoleDeptDTO;
 
 import java.util.List;
 
@@ -40,5 +40,5 @@ public interface SysRoleDeptMapper {
      * @param roleDeptList 角色部门列表
      * @return 结果
      */
-    public int batchRoleDept(List<SysRoleDept> roleDeptList);
+    int batchRoleDept(List<SysRoleDeptDTO> roleDeptList);
 }

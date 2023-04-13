@@ -2,6 +2,7 @@ package com.ruoyi.framework.web.service;
 
 import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.entity.dto.SysUserDTO;
 import com.ruoyi.system.service.ISysMenuService;
 import com.ruoyi.system.service.ISysRoleService;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class SysPermissionService {
      * @param user 用户信息
      * @return 角色权限信息
      */
-    public Set<String> getRolePermission(SysUser user) {
+    public Set<String> getRolePermission(SysUserDTO user) {
         Set<String> roles = new HashSet<>();
         // 管理员拥有所有权限
         if (user.isAdmin()) {
@@ -46,8 +47,8 @@ public class SysPermissionService {
      * @param user 用户信息
      * @return 菜单权限信息
      */
-    public Set<String> getMenuPermission(SysUser user) {
-        Set<String> perms = new HashSet<String>();
+    public Set<String> getMenuPermission(SysUserDTO user) {
+        Set<String> perms = new HashSet<>();
         // 管理员拥有所有权限
         if (user.isAdmin()) {
             perms.add("*:*:*");

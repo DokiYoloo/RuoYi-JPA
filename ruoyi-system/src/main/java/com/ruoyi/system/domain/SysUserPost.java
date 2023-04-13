@@ -6,8 +6,11 @@ import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import static javax.persistence.GenerationType.IDENTITY;
 
 /**
  * TODO change to many to one
@@ -21,10 +24,14 @@ import javax.persistence.Table;
 @Setter
 @ToString
 public class SysUserPost {
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(unique = true, nullable = false)
+    private Long id;
+
     /**
      * 用户ID
      */
-    @Id
     @Column(nullable = false)
     private Long userId;
 

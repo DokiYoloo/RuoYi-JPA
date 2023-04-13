@@ -3,6 +3,7 @@ package com.ruoyi.web.controller.system;
 import java.util.List;
 import java.util.Set;
 
+import com.ruoyi.common.core.domain.entity.dto.SysUserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,7 +55,7 @@ public class SysLoginController {
      */
     @GetMapping("getInfo")
     public AjaxResult getInfo() {
-        SysUser user = SecurityUtils.getLoginUser().getUser();
+        SysUserDTO user = SecurityUtils.getLoginUser().getUser();
         // 角色集合
         Set<String> roles = permissionService.getRolePermission(user);
         // 权限集合

@@ -1,6 +1,8 @@
 package com.ruoyi.framework.web.service;
 
+import com.ruoyi.common.core.domain.convertor.SysUserConvertor;
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.entity.dto.SysUserDTO;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.enums.UserStatus;
 import com.ruoyi.common.exception.ServiceException;
@@ -46,6 +48,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     public UserDetails createLoginUser(SysUser user) {
-        return new LoginUser(user.getUserId(), user.getDeptId(), user, permissionService.getMenuPermission(user));
+        SysUserDTO sysUser = SysUserConvertor.toDTO(user);
+        return new LoginUser(user.getUserId(), user.getDeptId(), sysUser, permissionService.getMenuPermission(user));
     }
 }

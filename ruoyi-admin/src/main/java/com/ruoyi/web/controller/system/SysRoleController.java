@@ -3,6 +3,8 @@ package com.ruoyi.web.controller.system;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.core.domain.ResponseEntity;
+import com.ruoyi.common.core.domain.convertor.SysUserConvertor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -98,13 +100,13 @@ public class SysRoleController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:role:edit')")
     @Log(title = "角色管理", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@Validated @RequestBody SysRole role) {
+    public ResponseEntity<Void> edit(@Validated @RequestBody SysRole role) {
         roleService.checkRoleAllowed(role);
         roleService.checkRoleDataScope(role.getRoleId());
         if (!roleService.checkRoleNameUnique(role)) {
-            return error("修改角色'" + role.getRoleName() + "'失败，角色名称已存在");
+            return ResponseEntity.failed("修改角色'" + role.getRoleName() + "'失败，角色名称已存在");
         } else if (!roleService.checkRoleKeyUnique(role)) {
-            return error("修改角色'" + role.getRoleName() + "'失败，角色权限已存在");
+            return ResponseEntity.failed("修改角色'" + role.getRoleName() + "'失败，角色权限已存在");
         }
         role.setUpdateBy(getUsername());
 
@@ -113,12 +115,13 @@ public class SysRoleController extends BaseController {
             LoginUser loginUser = getLoginUser();
             if (StringUtils.isNotNull(loginUser.getUser()) && !loginUser.getUser().isAdmin()) {
                 loginUser.setPermissions(permissionService.getMenuPermission(loginUser.getUser()));
-                loginUser.setUser(userService.selectUserByUserName(loginUser.getUser().getUserName()));
+                SysUser sysUser = userService.selectUserByUserName(loginUser.getUser().getUserName());
+                loginUser.setUser(SysUserConvertor.toDTO(sysUser));
                 tokenService.setLoginUser(loginUser);
             }
-            return success();
+            return ResponseEntity.success();
         }
-        return error("修改角色'" + role.getRoleName() + "'失败，请联系管理员");
+        return ResponseEntity.failed("修改角色'" + role.getRoleName() + "'失败，请联系管理员");
     }
 
     /**
@@ -127,10 +130,10 @@ public class SysRoleController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:role:edit')")
     @Log(title = "角色管理", businessType = BusinessType.UPDATE)
     @PutMapping("/dataScope")
-    public AjaxResult dataScope(@RequestBody SysRole role) {
+    public ResponseEntity<Void> dataScope(@RequestBody SysRole role) {
         roleService.checkRoleAllowed(role);
         roleService.checkRoleDataScope(role.getRoleId());
-        return toAjax(roleService.authDataScope(role));
+        return ResponseEntity.deduce(() -> roleService.authDataScope(role));
     }
 
     /**

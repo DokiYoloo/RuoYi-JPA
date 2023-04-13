@@ -11,11 +11,13 @@ import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.domain.SysRoleDept;
 import com.ruoyi.system.domain.SysRoleMenu;
 import com.ruoyi.system.domain.SysUserRole;
-import com.ruoyi.system.mapper.SysRoleDeptMapper;
 import com.ruoyi.system.mapper.SysRoleMapper;
 import com.ruoyi.system.mapper.SysRoleMenuMapper;
 import com.ruoyi.system.mapper.SysUserRoleMapper;
+import com.ruoyi.system.repository.SysRoleDeptRepository;
+import com.ruoyi.system.repository.SysRoleMenuRepository;
 import com.ruoyi.system.service.ISysRoleService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,18 +34,12 @@ import java.util.Set;
  * @author ruoyi
  */
 @Service
+@RequiredArgsConstructor
 public class SysRoleServiceImpl implements ISysRoleService {
-    @Autowired
-    private SysRoleMapper roleMapper;
-
-    @Autowired
-    private SysRoleMenuMapper roleMenuMapper;
-
-    @Autowired
-    private SysUserRoleMapper userRoleMapper;
-
-    @Autowired
-    private SysRoleDeptMapper roleDeptMapper;
+    private final SysRoleMapper roleMapper;
+    private final SysRoleMenuRepository roleMenuRepo;
+    private final SysUserRoleMapper userRoleMapper;
+    private final SysRoleDeptRepository roleDeptRepo;
 
     /**
      * 根据条件分页查询角色数据
@@ -208,10 +204,10 @@ public class SysRoleServiceImpl implements ISysRoleService {
      */
     @Override
     @Transactional
-    public int insertRole(SysRole role) {
+    public void insertRole(SysRole role) {
         // 新增角色信息
         roleMapper.insertRole(role);
-        return insertRoleMenu(role);
+        insertRoleMenu(role);
     }
 
     /**
@@ -222,12 +218,12 @@ public class SysRoleServiceImpl implements ISysRoleService {
      */
     @Override
     @Transactional
-    public int updateRole(SysRole role) {
+    public void updateRole(SysRole role) {
         // 修改角色信息
         roleMapper.updateRole(role);
         // 删除角色与菜单关联
-        roleMenuMapper.deleteRoleMenuByRoleId(role.getRoleId());
-        return insertRoleMenu(role);
+        roleMenuRepo.deleteRoleMenuByRoleId(role.getRoleId());
+        insertRoleMenu(role);
     }
 
     /**
@@ -245,17 +241,16 @@ public class SysRoleServiceImpl implements ISysRoleService {
      * 修改数据权限信息
      *
      * @param role 角色信息
-     * @return 结果
      */
     @Override
     @Transactional
-    public int authDataScope(SysRole role) {
+    public void authDataScope(SysRole role) {
         // 修改角色信息
         roleMapper.updateRole(role);
         // 删除角色与部门关联
-        roleDeptMapper.deleteRoleDeptByRoleId(role.getRoleId());
+        roleDeptRepo.deleteRoleDeptByRoleId(role.getRoleId());
         // 新增角色和部门信息（数据权限）
-        return insertRoleDept(role);
+        insertRoleDept(role);
     }
 
     /**
@@ -263,20 +258,16 @@ public class SysRoleServiceImpl implements ISysRoleService {
      *
      * @param role 角色对象
      */
-    public int insertRoleMenu(SysRole role) {
-        int rows = 1;
+    public void insertRoleMenu(SysRole role) {
         // 新增用户与角色管理
-        List<SysRoleMenu> list = new ArrayList<SysRoleMenu>();
+        List<SysRoleMenu> list = new ArrayList<>();
         for (Long menuId : role.getMenuIds()) {
             SysRoleMenu rm = new SysRoleMenu();
             rm.setRoleId(role.getRoleId());
             rm.setMenuId(menuId);
             list.add(rm);
         }
-        if (list.size() > 0) {
-            rows = roleMenuMapper.batchRoleMenu(list);
-        }
-        return rows;
+        roleMenuRepo.saveBatch(list);
     }
 
     /**
@@ -284,20 +275,16 @@ public class SysRoleServiceImpl implements ISysRoleService {
      *
      * @param role 角色对象
      */
-    public int insertRoleDept(SysRole role) {
-        int rows = 1;
+    public void insertRoleDept(SysRole role) {
         // 新增角色与部门（数据权限）管理
-        List<SysRoleDept> list = new ArrayList<SysRoleDept>();
+        List<SysRoleDept> list = new ArrayList<>();
         for (Long deptId : role.getDeptIds()) {
             SysRoleDept rd = new SysRoleDept();
             rd.setRoleId(role.getRoleId());
             rd.setDeptId(deptId);
             list.add(rd);
         }
-        if (list.size() > 0) {
-            rows = roleDeptMapper.batchRoleDept(list);
-        }
-        return rows;
+        roleDeptRepo.saveBatch(list);
     }
 
     /**
@@ -310,9 +297,9 @@ public class SysRoleServiceImpl implements ISysRoleService {
     @Transactional
     public int deleteRoleById(Long roleId) {
         // 删除角色与菜单关联
-        roleMenuMapper.deleteRoleMenuByRoleId(roleId);
+        roleMenuRepo.deleteRoleMenuByRoleId(roleId);
         // 删除角色与部门关联
-        roleDeptMapper.deleteRoleDeptByRoleId(roleId);
+        roleDeptRepo.deleteRoleDeptByRoleId(roleId);
         return roleMapper.deleteRoleById(roleId);
     }
 
@@ -334,9 +321,9 @@ public class SysRoleServiceImpl implements ISysRoleService {
             }
         }
         // 删除角色与菜单关联
-        roleMenuMapper.deleteRoleMenu(roleIds);
+        roleMenuRepo.deleteRoleMenu(roleIds);
         // 删除角色与部门关联
-        roleDeptMapper.deleteRoleDept(roleIds);
+        roleDeptRepo.deleteRoleDept(roleIds);
         return roleMapper.deleteRoleByIds(roleIds);
     }
 
