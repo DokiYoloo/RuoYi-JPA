@@ -1,12 +1,18 @@
 package com.ruoyi.system.service.impl;
 
 import com.ruoyi.system.domain.SysNotice;
-import com.ruoyi.system.mapper.SysNoticeMapper;
+import com.ruoyi.system.domain.convertor.SysNoticeConvertor;
+import com.ruoyi.system.domain.dto.SysNoticeDTO;
+import com.ruoyi.system.repository.SysNoticeRepository;
 import com.ruoyi.system.service.ISysNoticeService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Arrays;
+
+import static com.ruoyi.common.utils.SecurityUtils.getUsername;
 
 /**
  * 公告 服务层实现
@@ -14,9 +20,9 @@ import java.util.List;
  * @author ruoyi
  */
 @Service
+@RequiredArgsConstructor
 public class SysNoticeServiceImpl implements ISysNoticeService {
-    @Autowired
-    private SysNoticeMapper noticeMapper;
+    private final SysNoticeRepository noticeRepo;
 
     /**
      * 查询公告信息
@@ -26,7 +32,7 @@ public class SysNoticeServiceImpl implements ISysNoticeService {
      */
     @Override
     public SysNotice selectNoticeById(Long noticeId) {
-        return noticeMapper.selectNoticeById(noticeId);
+        return noticeRepo.findById(noticeId).orElse(null);
     }
 
     /**
@@ -36,51 +42,52 @@ public class SysNoticeServiceImpl implements ISysNoticeService {
      * @return 公告集合
      */
     @Override
-    public List<SysNotice> selectNoticeList(SysNotice notice) {
-        return noticeMapper.selectNoticeList(notice);
+    public Page<SysNotice> selectNoticePaged(SysNoticeDTO notice) {
+        Pageable pageable = notice.buildPageable();
+        return noticeRepo.findPaged(notice, pageable);
     }
 
     /**
      * 新增公告
      *
      * @param notice 公告信息
-     * @return 结果
      */
     @Override
-    public int insertNotice(SysNotice notice) {
-        return noticeMapper.insertNotice(notice);
+    public void insertNotice(SysNoticeDTO notice) {
+        SysNotice sysNotice = SysNoticeConvertor.toPO(notice);
+        sysNotice.setCreateBy(getUsername());
+        noticeRepo.save(sysNotice);
     }
 
     /**
      * 修改公告
      *
      * @param notice 公告信息
-     * @return 结果
      */
     @Override
-    public int updateNotice(SysNotice notice) {
-        return noticeMapper.updateNotice(notice);
+    public void updateNotice(SysNoticeDTO notice) {
+        SysNotice sysNotice = SysNoticeConvertor.toPO(notice);
+        sysNotice.setUpdateBy(getUsername());
+        noticeRepo.save(sysNotice);
     }
 
     /**
      * 删除公告对象
      *
      * @param noticeId 公告ID
-     * @return 结果
      */
     @Override
-    public int deleteNoticeById(Long noticeId) {
-        return noticeMapper.deleteNoticeById(noticeId);
+    public void deleteNoticeById(Long noticeId) {
+        noticeRepo.deleteById(noticeId);
     }
 
     /**
      * 批量删除公告信息
      *
      * @param noticeIds 需要删除的公告ID
-     * @return 结果
      */
     @Override
-    public int deleteNoticeByIds(Long[] noticeIds) {
-        return noticeMapper.deleteNoticeByIds(noticeIds);
+    public void deleteNoticeByIds(Long[] noticeIds) {
+        noticeRepo.deleteAllByIdInBatch(Arrays.asList(noticeIds));
     }
 }

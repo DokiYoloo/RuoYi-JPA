@@ -42,7 +42,11 @@ public class ResponseEntity<T> {
         return ResponseEntity.<M>success().setData(data);
     }
 
-    public static <M> ResponseEntity<M> failedResponse(String message) {
+    public static <M> ResponseEntity<M> failed(int code, String message) {
+        return ResponseEntity.<M>error().setCode(code).setMessage(message);
+    }
+
+    public static <M> ResponseEntity<M> failed(String message) {
         return ResponseEntity.<M>error().setMessage(message);
     }
 
@@ -68,7 +72,7 @@ public class ResponseEntity<T> {
             if (Objects.nonNull(consumer)) {
                 consumer.accept(e);
             }
-            return ResponseEntity.failedResponse(errorMsg);
+            return ResponseEntity.failed(errorMsg);
         }
     }
 }

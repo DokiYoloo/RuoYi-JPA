@@ -67,7 +67,7 @@ public class SysConfigController extends BaseController {
     public ResponseEntity<SysConfigDTO> getInfo(@PathVariable Long configId) {
         SysConfig sysConfig = configService.selectConfigById(configId);
         if (sysConfig == null) {
-            return ResponseEntity.failedResponse("配置不存在");
+            return ResponseEntity.failed("配置不存在");
         }
         return ResponseEntity.successful(SysConfigConvertor.toDTO(sysConfig));
     }
@@ -88,7 +88,7 @@ public class SysConfigController extends BaseController {
     @PostMapping
     public ResponseEntity<Void> add(@Validated @RequestBody SysConfigDTO config) {
         if (!configService.checkConfigKeyUnique(config)) {
-            return ResponseEntity.failedResponse("新增参数'" + config.getConfigName() + "'失败，参数键名已存在");
+            return ResponseEntity.failed("新增参数'" + config.getConfigName() + "'失败，参数键名已存在");
         }
         return ResponseEntity.deduce(() -> configService.insertConfig(config));
     }
@@ -101,10 +101,10 @@ public class SysConfigController extends BaseController {
     @PutMapping
     public ResponseEntity<Void> edit(@Validated @RequestBody SysConfigDTO config) {
         if (config.getConfigId() == null) {
-            return ResponseEntity.failedResponse("配置不存在");
+            return ResponseEntity.failed("配置不存在");
         }
         if (!configService.checkConfigKeyUnique(config)) {
-            return ResponseEntity.failedResponse("修改参数'" + config.getConfigName() + "'失败，参数键名已存在");
+            return ResponseEntity.failed("修改参数'" + config.getConfigName() + "'失败，参数键名已存在");
         }
         return ResponseEntity.deduce(() -> configService.updateConfig(config));
     }

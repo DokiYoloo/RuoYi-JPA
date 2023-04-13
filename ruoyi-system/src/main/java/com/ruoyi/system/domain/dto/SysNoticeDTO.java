@@ -1,5 +1,6 @@
 package com.ruoyi.system.domain.dto;
 
+import com.ruoyi.common.core.page.BasePageQuery;
 import com.ruoyi.common.xss.Xss;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +17,7 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 @ToString
-public class SysNoticeDTO {
+public class SysNoticeDTO extends BasePageQuery {
 
     /**
      * 公告ID

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fenixs namespace="com.ruoyi.system.repository.SysNoticeRepository">
+
+    <fenix id="findPaged">
+        from SysNotice where 1 = 1
+        <andLike match="notice.noticeTitle != empty" field="noticeTitle" value="notice.noticeTitle"/>
+        <andEqual match="notice.noticeType != empty" field="noticeType" value="notice.noticeType"/>
+        <andLike match="notice.createBy != empty" field="createBy" value="notice.createBy"/>
+    </fenix>
+
+</fenixs>

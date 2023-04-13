@@ -1,6 +1,5 @@
 package com.ruoyi.system.domain;
 
-import com.ruoyi.common.core.domain.BaseEntity;
 import com.ruoyi.common.core.domain.JpaBaseEntity;
 import lombok.Getter;
 import lombok.Setter;
