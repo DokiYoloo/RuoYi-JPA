@@ -1,7 +1,5 @@
 package com.ruoyi.common.core.domain.entity;
 
-import com.ruoyi.common.annotation.Excel;
-import com.ruoyi.common.annotation.Excel.ColumnType;
 import com.ruoyi.common.core.domain.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,31 +21,26 @@ public class SysRole extends BaseEntity {
     /**
      * 角色ID
      */
-    @Excel(name = "角色序号", cellType = ColumnType.NUMERIC)
     private Long roleId;
 
     /**
      * 角色名称
      */
-    @Excel(name = "角色名称")
     private String roleName;
 
     /**
      * 角色权限
      */
-    @Excel(name = "角色权限")
     private String roleKey;
 
     /**
      * 角色排序
      */
-    @Excel(name = "角色排序")
     private Integer roleSort;
 
     /**
      * 数据范围（1：所有数据权限；2：自定义数据权限；3：本部门数据权限；4：本部门及以下数据权限；5：仅本人数据权限）
      */
-    @Excel(name = "数据范围", readConverterExp = "1=所有数据权限,2=自定义数据权限,3=本部门数据权限,4=本部门及以下数据权限,5=仅本人数据权限")
     private String dataScope;
 
     /**
@@ -63,7 +56,6 @@ public class SysRole extends BaseEntity {
     /**
      * 角色状态（0正常 1停用）
      */
-    @Excel(name = "角色状态", readConverterExp = "0=正常,1=停用")
     private String status;
 
     /**
