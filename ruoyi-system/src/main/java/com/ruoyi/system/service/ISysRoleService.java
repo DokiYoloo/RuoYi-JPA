@@ -3,6 +3,7 @@ package com.ruoyi.system.service;
 import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.core.domain.entity.dto.SysRoleDTO;
 import com.ruoyi.system.domain.SysUserRole;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Set;
@@ -19,7 +20,7 @@ public interface ISysRoleService {
      * @param role 角色信息
      * @return 角色数据集合信息
      */
-    List<SysRole> selectRoleList(SysRole role);
+    Page<SysRole> selectRolePaged(SysRoleDTO role);
 
     /**
      * 根据用户ID查询角色列表
@@ -132,17 +133,15 @@ public interface ISysRoleService {
      * 通过角色ID删除角色
      *
      * @param roleId 角色ID
-     * @return 结果
      */
-    int deleteRoleById(Long roleId);
+    void deleteRoleById(Long roleId);
 
     /**
      * 批量删除角色信息
      *
      * @param roleIds 需要删除的角色ID
-     * @return 结果
      */
-    int deleteRoleByIds(Long[] roleIds);
+    void deleteRoleByIds(Long[] roleIds);
 
     /**
      * 取消授权用户角色

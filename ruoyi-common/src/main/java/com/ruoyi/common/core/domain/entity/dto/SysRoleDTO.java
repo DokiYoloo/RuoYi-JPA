@@ -2,6 +2,7 @@ package com.ruoyi.common.core.domain.entity.dto;
 
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.annotation.Excel.ColumnType;
+import com.ruoyi.common.core.page.BasePageQuery;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -19,7 +20,7 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
-public class SysRoleDTO {
+public class SysRoleDTO extends BasePageQuery {
 
     /**
      * 角色ID

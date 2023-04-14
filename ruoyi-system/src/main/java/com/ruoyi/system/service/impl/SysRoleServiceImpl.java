@@ -13,14 +13,14 @@ import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.domain.SysRoleDept;
 import com.ruoyi.system.domain.SysRoleMenu;
 import com.ruoyi.system.domain.SysUserRole;
-import com.ruoyi.system.mapper.SysRoleMapper;
-import com.ruoyi.system.mapper.SysRoleMenuMapper;
 import com.ruoyi.system.mapper.SysUserRoleMapper;
 import com.ruoyi.system.repository.SysRoleDeptRepository;
 import com.ruoyi.system.repository.SysRoleMenuRepository;
+import com.ruoyi.system.repository.SysRoleRepository;
 import com.ruoyi.system.service.ISysRoleService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +40,7 @@ import static com.ruoyi.common.utils.SecurityUtils.getUsername;
 @Service
 @RequiredArgsConstructor
 public class SysRoleServiceImpl implements ISysRoleService {
-    private final SysRoleMapper roleMapper;
+    private final SysRoleRepository sysRoleRepo;
     private final SysRoleMenuRepository roleMenuRepo;
     private final SysUserRoleMapper userRoleMapper;
     private final SysRoleDeptRepository roleDeptRepo;
@@ -53,8 +53,9 @@ public class SysRoleServiceImpl implements ISysRoleService {
      */
     @Override
     @DataScope(deptAlias = "d")
-    public List<SysRole> selectRoleList(SysRole role) {
-        return roleMapper.selectRoleList(role);
+    public Page<SysRole> selectRolePaged(SysRoleDTO role) {
+        Pageable pageable = role.buildPageable();
+        return sysRoleRepo.findPaged(role, pageable);
     }
 
     /**
@@ -65,7 +66,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
      */
     @Override
     public List<SysRole> selectRolesByUserId(Long userId) {
-        List<SysRole> userRoles = roleMapper.selectRolePermissionByUserId(userId);
+        List<SysRole> userRoles = sysRoleRepo.findAllByUserId(userId);
         List<SysRole> roles = selectRoleAll();
         for (SysRole role : roles) {
             for (SysRole userRole : userRoles) {
@@ -86,7 +87,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
      */
     @Override
     public Set<String> selectRolePermissionByUserId(Long userId) {
-        List<SysRole> perms = roleMapper.selectRolePermissionByUserId(userId);
+        List<SysRole> perms = sysRoleRepo.findAllByUserId(userId);
         Set<String> permsSet = new HashSet<>();
         for (SysRole perm : perms) {
             if (StringUtils.isNotNull(perm)) {
@@ -103,7 +104,10 @@ public class SysRoleServiceImpl implements ISysRoleService {
      */
     @Override
     public List<SysRole> selectRoleAll() {
-        return SpringUtils.getAopProxy(this).selectRoleList(new SysRole());
+        SysRoleDTO sysRoleDTO = new SysRoleDTO();
+        sysRoleDTO.setPageNum(1);
+        sysRoleDTO.setPageSize(99999);
+        return SpringUtils.getAopProxy(this).selectRolePaged(sysRoleDTO).getContent();
     }
 
     /**
@@ -114,7 +118,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
      */
     @Override
     public List<Long> selectRoleListByUserId(Long userId) {
-        return roleMapper.selectRoleListByUserId(userId);
+        return sysRoleRepo.findIdsByUserId(userId);
     }
 
     /**
@@ -125,7 +129,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
      */
     @Override
     public SysRole selectRoleById(Long roleId) {
-        return roleMapper.selectRoleById(roleId);
+        return sysRoleRepo.findById(roleId).orElse(null);
     }
 
     /**
@@ -137,7 +141,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
     @Override
     public boolean checkRoleNameUnique(SysRoleDTO role) {
         long roleId = StringUtils.isNull(role.getRoleId()) ? -1L : role.getRoleId();
-        SysRole info = roleMapper.checkRoleNameUnique(role.getRoleName());
+        SysRole info = sysRoleRepo.findByRoleName(role.getRoleName());
         if (StringUtils.isNotNull(info) && info.getRoleId() != roleId) {
             return UserConstants.NOT_UNIQUE;
         }
@@ -153,7 +157,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
     @Override
     public boolean checkRoleKeyUnique(SysRoleDTO role) {
         long roleId = StringUtils.isNull(role.getRoleId()) ? -1L : role.getRoleId();
-        SysRole info = roleMapper.checkRoleKeyUnique(role.getRoleKey());
+        SysRole info = sysRoleRepo.findByRoleKey(role.getRoleKey());
         if (StringUtils.isNotNull(info) && info.getRoleId() != roleId) {
             return UserConstants.NOT_UNIQUE;
         }
@@ -180,10 +184,12 @@ public class SysRoleServiceImpl implements ISysRoleService {
     @Override
     public void checkRoleDataScope(Long roleId) {
         if (!SysUser.isAdmin(SecurityUtils.getUserId())) {
-            SysRole role = new SysRole();
+            SysRoleDTO role = new SysRoleDTO();
             role.setRoleId(roleId);
-            List<SysRole> roles = SpringUtils.getAopProxy(this).selectRoleList(role);
-            if (StringUtils.isEmpty(roles)) {
+            role.setPageNum(1);
+            role.setPageSize(99999);
+            Page<SysRole> roles = SpringUtils.getAopProxy(this).selectRolePaged(role);
+            if (StringUtils.isEmpty(roles.getContent())) {
                 throw new ServiceException("没有权限访问角色数据！");
             }
         }
@@ -211,7 +217,8 @@ public class SysRoleServiceImpl implements ISysRoleService {
     public void insertRole(SysRoleDTO role) {
         SysRole sysRole = SysRoleConvertor.toPO(role);
         sysRole.setCreateBy(getUsername());
-        roleMapper.insertRole(sysRole);
+        sysRole = sysRoleRepo.save(sysRole);
+        role.setRoleId(sysRole.getRoleId());
         insertRoleMenu(role);
     }
 
@@ -227,7 +234,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
         SysRole sysRole = SysRoleConvertor.toPO(role);
         sysRole.setUpdateBy(getUsername());
         // 修改角色信息
-        roleMapper.updateRole(sysRole);
+        sysRoleRepo.save(sysRole);
         // 删除角色与菜单关联
         roleMenuRepo.deleteRoleMenuByRoleId(role.getRoleId());
         insertRoleMenu(role);
@@ -241,7 +248,9 @@ public class SysRoleServiceImpl implements ISysRoleService {
      */
     @Override
     public void updateRoleStatus(SysRoleDTO role) {
-        roleMapper.updateRole(role);
+        SysRole sysRole = SysRoleConvertor.toPO(role);
+        sysRole.setUpdateBy(getUsername());
+        sysRoleRepo.save(sysRole);
     }
 
     /**
@@ -253,7 +262,8 @@ public class SysRoleServiceImpl implements ISysRoleService {
     @Transactional
     public void authDataScope(SysRoleDTO role) {
         // 修改角色信息
-        roleMapper.updateRole(role);
+        SysRole sysRole = SysRoleConvertor.toPO(role);
+        sysRoleRepo.save(sysRole);
         // 删除角色与部门关联
         roleDeptRepo.deleteRoleDeptByRoleId(role.getRoleId());
         // 新增角色和部门信息（数据权限）
@@ -298,27 +308,25 @@ public class SysRoleServiceImpl implements ISysRoleService {
      * 通过角色ID删除角色
      *
      * @param roleId 角色ID
-     * @return 结果
      */
     @Override
     @Transactional
-    public int deleteRoleById(Long roleId) {
+    public void deleteRoleById(Long roleId) {
         // 删除角色与菜单关联
         roleMenuRepo.deleteRoleMenuByRoleId(roleId);
         // 删除角色与部门关联
         roleDeptRepo.deleteRoleDeptByRoleId(roleId);
-        return roleMapper.deleteRoleById(roleId);
+        sysRoleRepo.deleteById(roleId);
     }
 
     /**
      * 批量删除角色信息
      *
      * @param roleIds 需要删除的角色ID
-     * @return 结果
      */
     @Override
     @Transactional
-    public int deleteRoleByIds(Long[] roleIds) {
+    public void deleteRoleByIds(Long[] roleIds) {
         for (Long roleId : roleIds) {
             checkRoleAllowed(new SysRoleDTO(roleId));
             checkRoleDataScope(roleId);
@@ -331,7 +339,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
         roleMenuRepo.deleteRoleMenu(roleIds);
         // 删除角色与部门关联
         roleDeptRepo.deleteRoleDept(roleIds);
-        return roleMapper.deleteRoleByIds(roleIds);
+        sysRoleRepo.deleteAllById(Arrays.asList(roleIds));
     }
 
     /**

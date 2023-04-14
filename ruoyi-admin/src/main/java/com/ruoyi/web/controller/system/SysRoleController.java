@@ -4,6 +4,7 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.ResponseEntity;
+import com.ruoyi.common.core.domain.convertor.SysRoleConvertor;
 import com.ruoyi.common.core.domain.convertor.SysUserConvertor;
 import com.ruoyi.common.core.domain.entity.SysDept;
 import com.ruoyi.common.core.domain.entity.SysRole;
@@ -21,6 +22,7 @@ import com.ruoyi.system.service.ISysDeptService;
 import com.ruoyi.system.service.ISysRoleService;
 import com.ruoyi.system.service.ISysUserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 角色信息
@@ -52,19 +55,19 @@ public class SysRoleController extends BaseController {
 
     @PreAuthorize("@ss.hasPermi('system:role:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysRole role) {
-        startPage();
-        List<SysRole> list = roleService.selectRoleList(role);
-        return getDataTable(list);
+    public TableDataInfo<SysRoleDTO> list(SysRoleDTO role) {
+        Page<SysRole> paged = roleService.selectRolePaged(role);
+        return getDataTable(paged.map(SysRoleConvertor::toDTO));
     }
 
     @Log(title = "角色管理", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:role:export')")
     @PostMapping("/export")
-    public void export(HttpServletResponse response, SysRole role) {
-        List<SysRole> list = roleService.selectRoleList(role);
-        ExcelUtil<SysRole> util = new ExcelUtil<SysRole>(SysRole.class);
-        util.exportExcel(response, list, "角色数据");
+    public void export(HttpServletResponse response, SysRoleDTO role) {
+        Page<SysRoleDTO> paged = roleService.selectRolePaged(role)
+                .map(SysRoleConvertor::toDTO);
+        ExcelUtil<SysRoleDTO> util = new ExcelUtil<>(SysRoleDTO.class);
+        util.exportExcel(response, paged.getContent(), "角色数据");
     }
 
     /**
@@ -149,8 +152,8 @@ public class SysRoleController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:role:remove')")
     @Log(title = "角色管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/{roleIds}")
-    public AjaxResult remove(@PathVariable Long[] roleIds) {
-        return toAjax(roleService.deleteRoleByIds(roleIds));
+    public ResponseEntity<Void> remove(@PathVariable Long[] roleIds) {
+        return ResponseEntity.deduce(() -> roleService.deleteRoleByIds(roleIds));
     }
 
     /**
@@ -158,8 +161,11 @@ public class SysRoleController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:role:query')")
     @GetMapping("/optionselect")
-    public AjaxResult optionselect() {
-        return success(roleService.selectRoleAll());
+    public ResponseEntity<List<SysRoleDTO>> optionselect() {
+        List<SysRoleDTO> roleList = roleService.selectRoleAll().stream()
+                .map(SysRoleConvertor::toDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.successful(roleList);
     }
 
     /**
@@ -190,8 +196,8 @@ public class SysRoleController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:role:edit')")
     @Log(title = "角色管理", businessType = BusinessType.GRANT)
     @PutMapping("/authUser/cancel")
-    public AjaxResult cancelAuthUser(@RequestBody SysUserRole userRole) {
-        return toAjax(roleService.deleteAuthUser(userRole));
+    public ResponseEntity<Void> cancelAuthUser(@RequestBody SysUserRole userRole) {
+        return ResponseEntity.deduce(() -> roleService.deleteAuthUser(userRole));
     }
 
     /**
@@ -200,8 +206,8 @@ public class SysRoleController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:role:edit')")
     @Log(title = "角色管理", businessType = BusinessType.GRANT)
     @PutMapping("/authUser/cancelAll")
-    public AjaxResult cancelAuthUserAll(Long roleId, Long[] userIds) {
-        return toAjax(roleService.deleteAuthUsers(roleId, userIds));
+    public ResponseEntity<Void> cancelAuthUserAll(Long roleId, Long[] userIds) {
+        return ResponseEntity.deduce(() -> roleService.deleteAuthUsers(roleId, userIds));
     }
 
     /**
@@ -210,9 +216,9 @@ public class SysRoleController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:role:edit')")
     @Log(title = "角色管理", businessType = BusinessType.GRANT)
     @PutMapping("/authUser/selectAll")
-    public AjaxResult selectAuthUserAll(Long roleId, Long[] userIds) {
+    public ResponseEntity<Void> selectAuthUserAll(Long roleId, Long[] userIds) {
         roleService.checkRoleDataScope(roleId);
-        return toAjax(roleService.insertAuthUsers(roleId, userIds));
+        return ResponseEntity.deduce(() -> roleService.insertAuthUsers(roleId, userIds));
     }
 
     /**
