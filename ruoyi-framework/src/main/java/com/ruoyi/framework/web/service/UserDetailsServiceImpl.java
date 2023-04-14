@@ -49,6 +49,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     public UserDetails createLoginUser(SysUser user) {
         SysUserDTO sysUser = SysUserConvertor.toDTO(user);
-        return new LoginUser(user.getUserId(), user.getDeptId(), sysUser, permissionService.getMenuPermission(user));
+        return new LoginUser(user.getUserId(), user.getDeptId(), sysUser, permissionService.getMenuPermission(sysUser));
     }
 }

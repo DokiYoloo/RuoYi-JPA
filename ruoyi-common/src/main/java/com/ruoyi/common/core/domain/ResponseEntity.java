@@ -47,7 +47,7 @@ public class ResponseEntity<T> {
     }
 
     public static <M> ResponseEntity<M> failed(String message) {
-        return ResponseEntity.<M>error().setMessage(message);
+        return ResponseEntity.<M>error().setCode(HttpStatus.ERROR).setMessage(message);
     }
 
     public static <M> ResponseEntity<M> deduce(Runnable runnable) {

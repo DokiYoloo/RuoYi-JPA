@@ -2,8 +2,10 @@ package com.ruoyi.system.service.impl;
 
 import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.constant.UserConstants;
+import com.ruoyi.common.core.domain.convertor.SysRoleConvertor;
 import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.entity.dto.SysRoleDTO;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
@@ -27,6 +29,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.ruoyi.common.utils.SecurityUtils.getUsername;
 
 /**
  * 角色 业务层处理
@@ -131,10 +135,10 @@ public class SysRoleServiceImpl implements ISysRoleService {
      * @return 结果
      */
     @Override
-    public boolean checkRoleNameUnique(SysRole role) {
-        Long roleId = StringUtils.isNull(role.getRoleId()) ? -1L : role.getRoleId();
+    public boolean checkRoleNameUnique(SysRoleDTO role) {
+        long roleId = StringUtils.isNull(role.getRoleId()) ? -1L : role.getRoleId();
         SysRole info = roleMapper.checkRoleNameUnique(role.getRoleName());
-        if (StringUtils.isNotNull(info) && info.getRoleId().longValue() != roleId.longValue()) {
+        if (StringUtils.isNotNull(info) && info.getRoleId() != roleId) {
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;
@@ -147,10 +151,10 @@ public class SysRoleServiceImpl implements ISysRoleService {
      * @return 结果
      */
     @Override
-    public boolean checkRoleKeyUnique(SysRole role) {
-        Long roleId = StringUtils.isNull(role.getRoleId()) ? -1L : role.getRoleId();
+    public boolean checkRoleKeyUnique(SysRoleDTO role) {
+        long roleId = StringUtils.isNull(role.getRoleId()) ? -1L : role.getRoleId();
         SysRole info = roleMapper.checkRoleKeyUnique(role.getRoleKey());
-        if (StringUtils.isNotNull(info) && info.getRoleId().longValue() != roleId.longValue()) {
+        if (StringUtils.isNotNull(info) && info.getRoleId() != roleId) {
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;
@@ -162,7 +166,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
      * @param role 角色信息
      */
     @Override
-    public void checkRoleAllowed(SysRole role) {
+    public void checkRoleAllowed(SysRoleDTO role) {
         if (StringUtils.isNotNull(role.getRoleId()) && role.isAdmin()) {
             throw new ServiceException("不允许操作超级管理员角色");
         }
@@ -204,9 +208,10 @@ public class SysRoleServiceImpl implements ISysRoleService {
      */
     @Override
     @Transactional
-    public void insertRole(SysRole role) {
-        // 新增角色信息
-        roleMapper.insertRole(role);
+    public void insertRole(SysRoleDTO role) {
+        SysRole sysRole = SysRoleConvertor.toPO(role);
+        sysRole.setCreateBy(getUsername());
+        roleMapper.insertRole(sysRole);
         insertRoleMenu(role);
     }
 
@@ -218,9 +223,11 @@ public class SysRoleServiceImpl implements ISysRoleService {
      */
     @Override
     @Transactional
-    public void updateRole(SysRole role) {
+    public void updateRole(SysRoleDTO role) {
+        SysRole sysRole = SysRoleConvertor.toPO(role);
+        sysRole.setUpdateBy(getUsername());
         // 修改角色信息
-        roleMapper.updateRole(role);
+        roleMapper.updateRole(sysRole);
         // 删除角色与菜单关联
         roleMenuRepo.deleteRoleMenuByRoleId(role.getRoleId());
         insertRoleMenu(role);
@@ -233,8 +240,8 @@ public class SysRoleServiceImpl implements ISysRoleService {
      * @return 结果
      */
     @Override
-    public int updateRoleStatus(SysRole role) {
-        return roleMapper.updateRole(role);
+    public void updateRoleStatus(SysRoleDTO role) {
+        roleMapper.updateRole(role);
     }
 
     /**
@@ -244,7 +251,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
      */
     @Override
     @Transactional
-    public void authDataScope(SysRole role) {
+    public void authDataScope(SysRoleDTO role) {
         // 修改角色信息
         roleMapper.updateRole(role);
         // 删除角色与部门关联
@@ -258,7 +265,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
      *
      * @param role 角色对象
      */
-    public void insertRoleMenu(SysRole role) {
+    public void insertRoleMenu(SysRoleDTO role) {
         // 新增用户与角色管理
         List<SysRoleMenu> list = new ArrayList<>();
         for (Long menuId : role.getMenuIds()) {
@@ -275,7 +282,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
      *
      * @param role 角色对象
      */
-    public void insertRoleDept(SysRole role) {
+    public void insertRoleDept(SysRoleDTO role) {
         // 新增角色与部门（数据权限）管理
         List<SysRoleDept> list = new ArrayList<>();
         for (Long deptId : role.getDeptIds()) {
@@ -313,7 +320,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
     @Transactional
     public int deleteRoleByIds(Long[] roleIds) {
         for (Long roleId : roleIds) {
-            checkRoleAllowed(new SysRole(roleId));
+            checkRoleAllowed(new SysRoleDTO(roleId));
             checkRoleDataScope(roleId);
             SysRole role = selectRoleById(roleId);
             if (countUserRoleByRoleId(roleId) > 0) {

@@ -1,6 +1,7 @@
 package com.ruoyi.system.service;
 
 import com.ruoyi.common.core.domain.entity.SysRole;
+import com.ruoyi.common.core.domain.entity.dto.SysRoleDTO;
 import com.ruoyi.system.domain.SysUserRole;
 
 import java.util.List;
@@ -65,7 +66,7 @@ public interface ISysRoleService {
      * @param role 角色信息
      * @return 结果
      */
-    boolean checkRoleNameUnique(SysRole role);
+    boolean checkRoleNameUnique(SysRoleDTO role);
 
     /**
      * 校验角色权限是否唯一
@@ -73,14 +74,14 @@ public interface ISysRoleService {
      * @param role 角色信息
      * @return 结果
      */
-    boolean checkRoleKeyUnique(SysRole role);
+    boolean checkRoleKeyUnique(SysRoleDTO role);
 
     /**
      * 校验角色是否允许操作
      *
      * @param role 角色信息
      */
-    void checkRoleAllowed(SysRole role);
+    void checkRoleAllowed(SysRoleDTO role);
 
     /**
      * 校验角色是否有数据权限
@@ -103,7 +104,7 @@ public interface ISysRoleService {
      * @param role 角色信息
      * @return 结果
      */
-    void insertRole(SysRole role);
+    void insertRole(SysRoleDTO role);
 
     /**
      * 修改保存角色信息
@@ -111,22 +112,21 @@ public interface ISysRoleService {
      * @param role 角色信息
      * @return 结果
      */
-    void updateRole(SysRole role);
+    void updateRole(SysRoleDTO role);
 
     /**
      * 修改角色状态
      *
      * @param role 角色信息
-     * @return 结果
      */
-    int updateRoleStatus(SysRole role);
+    void updateRoleStatus(SysRoleDTO role);
 
     /**
      * 修改数据权限信息
      *
      * @param role 角色信息
      */
-    void authDataScope(SysRole role);
+    void authDataScope(SysRoleDTO role);
 
     /**
      * 通过角色ID删除角色

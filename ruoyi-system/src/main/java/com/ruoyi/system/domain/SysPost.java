@@ -10,7 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -58,12 +57,5 @@ public class SysPost extends JpaBaseEntity {
      */
     @Column(length = 2)
     private String status;
-
-    /**
-     * TODO
-     * 用户是否存在此岗位标识 默认不存在
-     */
-    @Transient
-    private boolean flag = false;
 
 }

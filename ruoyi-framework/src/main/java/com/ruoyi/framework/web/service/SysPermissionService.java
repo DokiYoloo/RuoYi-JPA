@@ -1,12 +1,10 @@
 package com.ruoyi.framework.web.service;
 
-import com.ruoyi.common.core.domain.entity.SysRole;
-import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.entity.dto.SysRoleDTO;
 import com.ruoyi.common.core.domain.entity.dto.SysUserDTO;
 import com.ruoyi.system.service.ISysMenuService;
 import com.ruoyi.system.service.ISysRoleService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -53,10 +51,10 @@ public class SysPermissionService {
         if (user.isAdmin()) {
             perms.add("*:*:*");
         } else {
-            List<SysRole> roles = user.getRoles();
+            List<SysRoleDTO> roles = user.getRoles();
             if (!roles.isEmpty() && roles.size() > 1) {
                 // 多角色设置permissions属性，以便数据权限匹配权限
-                for (SysRole role : roles) {
+                for (SysRoleDTO role : roles) {
                     Set<String> rolePerms = menuService.selectMenuPermsByRoleId(role.getRoleId());
                     role.setPermissions(rolePerms);
                     perms.addAll(rolePerms);

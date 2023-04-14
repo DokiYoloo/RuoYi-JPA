@@ -31,7 +31,7 @@ public class SysRoleDTO {
      * 角色名称
      */
     @NotBlank(message = "角色名称不能为空")
-    @Size(min = 0, max = 30, message = "角色名称长度不能超过30个字符")
+    @Size(max = 30, message = "角色名称长度不能超过{max}个字符")
     @Excel(name = "角色名称")
     private String roleName;
 
@@ -39,7 +39,7 @@ public class SysRoleDTO {
      * 角色权限
      */
     @NotBlank(message = "权限字符不能为空")
-    @Size(min = 0, max = 100, message = "权限字符长度不能超过100个字符")
+    @Size(max = 100, message = "权限字符长度不能超过{max}个字符")
     @Excel(name = "角色权限")
     private String roleKey;
 
@@ -103,6 +103,14 @@ public class SysRoleDTO {
 
     public SysRoleDTO(Long roleId) {
         this.roleId = roleId;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin(this.roleId);
+    }
+
+    public static boolean isAdmin(Long roleId) {
+        return roleId != null && 1L == roleId;
     }
 
 }

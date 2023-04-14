@@ -122,7 +122,7 @@ public class SysUserDTO {
     /**
      * 角色对象
      */
-    private List<SysRole> roles;
+    private List<SysRoleDTO> roles;
 
     /**
      * 角色组
