@@ -12,12 +12,11 @@ import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.domain.SysPost;
 import com.ruoyi.system.domain.SysUserPost;
 import com.ruoyi.system.domain.SysUserRole;
-import com.ruoyi.system.mapper.SysPostMapper;
-import com.ruoyi.system.mapper.SysRoleMapper;
 import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.system.mapper.SysUserPostMapper;
 import com.ruoyi.system.mapper.SysUserRoleMapper;
 import com.ruoyi.system.repository.SysPostRepository;
+import com.ruoyi.system.repository.SysRoleRepository;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysUserService;
 import org.slf4j.Logger;
@@ -45,7 +44,7 @@ public class SysUserServiceImpl implements ISysUserService {
     private SysUserMapper userMapper;
 
     @Autowired
-    private SysRoleMapper roleMapper;
+    private SysRoleRepository roleRepo;
 
     @Autowired
     private SysPostRepository sysPostRepo;
@@ -128,7 +127,7 @@ public class SysUserServiceImpl implements ISysUserService {
      */
     @Override
     public String selectUserRoleGroup(String userName) {
-        List<SysRole> list = roleMapper.selectRolesByUserName(userName);
+        List<SysRole> list = roleRepo.findAllByUserName(userName);
         if (CollectionUtils.isEmpty(list)) {
             return StringUtils.EMPTY;
         }

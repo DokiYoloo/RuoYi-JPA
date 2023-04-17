@@ -11,14 +11,15 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.vo.MetaVo;
 import com.ruoyi.system.domain.vo.RouterVo;
 import com.ruoyi.system.mapper.SysMenuMapper;
-import com.ruoyi.system.mapper.SysRoleMapper;
 import com.ruoyi.system.mapper.SysRoleMenuMapper;
+import com.ruoyi.system.repository.SysRoleRepository;
 import com.ruoyi.system.service.ISysMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -39,7 +40,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
     private SysMenuMapper menuMapper;
 
     @Autowired
-    private SysRoleMapper roleMapper;
+    private SysRoleRepository roleRepo;
 
     @Autowired
     private SysRoleMenuMapper roleMenuMapper;
@@ -135,7 +136,10 @@ public class SysMenuServiceImpl implements ISysMenuService {
      */
     @Override
     public List<Long> selectMenuListByRoleId(Long roleId) {
-        SysRole role = roleMapper.selectRoleById(roleId);
+        SysRole role = roleRepo.findById(roleId).orElse(null);
+        if (role == null) {
+            return Collections.emptyList();
+        }
         return menuMapper.selectMenuListByRoleId(roleId, role.isMenuCheckStrictly());
     }
 

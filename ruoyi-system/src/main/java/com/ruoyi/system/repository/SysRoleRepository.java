@@ -34,4 +34,7 @@ public interface SysRoleRepository extends FenixJpaRepository<SysRole, Long> {
 
     @Query("select r.roleId from SysRole r left join SysUserRole ur on r.roleId = ur.roleId left join SysUser u on u.userId = ur.userId where u.userId = ?1")
     List<Long> findIdsByUserId(Long userId);
+
+    @Query("from SysRole r left join SysUserRole ur on r.roleId = ur.roleId left join SysUser u on u.userId = ur.userId where r.delFlag = '0' and u.userName = ?1")
+    List<SysRole> findAllByUserName(String userName);
 }
