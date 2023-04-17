@@ -61,7 +61,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
     @Override
     public List<TreeSelect> selectDeptTreeList(SysDeptDTO dept) {
         List<SysDept> depts = SpringUtils.getAopProxy(this).selectDeptList(dept).getContent();
-        return buildDeptTreeSelect(depts);
+        return buildDeptTreeSelect(depts.stream().map(SysDeptConvertor::toDTO).collect(Collectors.toList()));
     }
 
     /**
@@ -71,10 +71,10 @@ public class SysDeptServiceImpl implements ISysDeptService {
      * @return 树结构列表
      */
     @Override
-    public List<SysDept> buildDeptTree(List<SysDept> depts) {
-        List<SysDept> returnList = new ArrayList<SysDept>();
-        List<Long> tempList = depts.stream().map(SysDept::getDeptId).collect(Collectors.toList());
-        for (SysDept dept : depts) {
+    public List<SysDeptDTO> buildDeptTree(List<SysDeptDTO> depts) {
+        List<SysDeptDTO> returnList = new ArrayList<>();
+        List<Long> tempList = depts.stream().map(SysDeptDTO::getDeptId).collect(Collectors.toList());
+        for (SysDeptDTO dept : depts) {
             // 如果是顶级节点, 遍历该父节点的所有子节点
             if (!tempList.contains(dept.getParentId())) {
                 recursionFn(depts, dept);
@@ -94,8 +94,8 @@ public class SysDeptServiceImpl implements ISysDeptService {
      * @return 下拉树结构列表
      */
     @Override
-    public List<TreeSelect> buildDeptTreeSelect(List<SysDept> depts) {
-        List<SysDept> deptTrees = buildDeptTree(depts);
+    public List<TreeSelect> buildDeptTreeSelect(List<SysDeptDTO> depts) {
+        List<SysDeptDTO> deptTrees = buildDeptTree(depts);
         return deptTrees.stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
@@ -277,11 +277,11 @@ public class SysDeptServiceImpl implements ISysDeptService {
     /**
      * 递归列表
      */
-    private void recursionFn(List<SysDept> list, SysDept t) {
+    private void recursionFn(List<SysDeptDTO> list, SysDeptDTO t) {
         // 得到子节点列表
-        List<SysDept> childList = getChildList(list, t);
+        List<SysDeptDTO> childList = getChildList(list, t);
         t.setChildren(childList);
-        for (SysDept tChild : childList) {
+        for (SysDeptDTO tChild : childList) {
             if (hasChild(list, tChild)) {
                 recursionFn(list, tChild);
             }
@@ -291,11 +291,9 @@ public class SysDeptServiceImpl implements ISysDeptService {
     /**
      * 得到子节点列表
      */
-    private List<SysDept> getChildList(List<SysDept> list, SysDept t) {
-        List<SysDept> tlist = new ArrayList<SysDept>();
-        Iterator<SysDept> it = list.iterator();
-        while (it.hasNext()) {
-            SysDept n = (SysDept) it.next();
+    private List<SysDeptDTO> getChildList(List<SysDeptDTO> list, SysDeptDTO t) {
+        List<SysDeptDTO> tlist = new ArrayList<>();
+        for (SysDeptDTO n : list) {
             if (StringUtils.isNotNull(n.getParentId()) && n.getParentId().longValue() == t.getDeptId().longValue()) {
                 tlist.add(n);
             }
@@ -306,7 +304,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
     /**
      * 判断是否有子节点
      */
-    private boolean hasChild(List<SysDept> list, SysDept t) {
+    private boolean hasChild(List<SysDeptDTO> list, SysDeptDTO t) {
         return getChildList(list, t).size() > 0;
     }
 }

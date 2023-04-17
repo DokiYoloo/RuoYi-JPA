@@ -35,7 +35,7 @@ public interface ISysDeptService {
      * @param depts 部门列表
      * @return 树结构列表
      */
-    List<SysDept> buildDeptTree(List<SysDept> depts);
+    List<SysDeptDTO> buildDeptTree(List<SysDeptDTO> depts);
 
     /**
      * 构建前端所需要下拉树结构
@@ -43,7 +43,7 @@ public interface ISysDeptService {
      * @param depts 部门列表
      * @return 下拉树结构列表
      */
-    List<TreeSelect> buildDeptTreeSelect(List<SysDept> depts);
+    List<TreeSelect> buildDeptTreeSelect(List<SysDeptDTO> depts);
 
     /**
      * 根据角色ID查询部门树信息
