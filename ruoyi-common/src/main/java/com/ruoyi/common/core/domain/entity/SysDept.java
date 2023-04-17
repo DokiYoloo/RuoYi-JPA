@@ -10,8 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -84,10 +82,5 @@ public class SysDept extends BaseEntity {
      * 父部门名称
      */
     private String parentName;
-
-    /**
-     * 子部门
-     */
-    private List<SysDept> children = new ArrayList<SysDept>();
 
 }
