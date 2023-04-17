@@ -49,7 +49,7 @@ public interface SysDeptRepository extends FenixJpaRepository<SysDept, Long> {
      * @param deptId 部门ID
      * @return 部门列表
      */
-    @Query("from SysDept where find_in_set(:deptId, ancestors) > 0")
+    @Query("from SysDept d where find_in_set(:deptId, d.ancestors) > 0")
     List<SysDept> selectChildrenDeptById(Long deptId);
 
     /**
