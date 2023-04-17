@@ -58,6 +58,7 @@ public interface SysDeptRepository extends FenixJpaRepository<SysDept, Long> {
      * @param deptId 部门ID
      * @return 子部门数
      */
+    @Query("select count(d) from SysDept d where d.status = 0 and d.delFlag = '0' and find_in_set(:deptId, d.ancestors) > 0")
     int selectNormalChildrenDeptById(Long deptId);
 
     /**
