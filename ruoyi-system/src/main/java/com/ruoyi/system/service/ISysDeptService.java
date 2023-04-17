@@ -19,7 +19,7 @@ public interface ISysDeptService {
      * @param dept 部门信息
      * @return 部门信息集合
      */
-    Page<SysDept> selectDeptList(SysDeptDTO dept);
+    Page<SysDept> selectDeptPaged(SysDeptDTO dept);
 
     /**
      * 查询部门树结构信息

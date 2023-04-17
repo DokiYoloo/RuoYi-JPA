@@ -27,12 +27,12 @@ public class BasePageQuery extends BaseEntity {
     /**
      * 当前记录起始索引
      */
-    private Integer pageNum;
+    private Integer pageNum = 1;
 
     /**
      * 每页显示记录数
      */
-    private Integer pageSize;
+    private Integer pageSize = Integer.MAX_VALUE;
 
     /**
      * 排序列

@@ -22,7 +22,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,7 +46,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
      */
     @Override
     @DataScope(deptAlias = "d")
-    public Page<SysDept> selectDeptList(SysDeptDTO dept) {
+    public Page<SysDept> selectDeptPaged(SysDeptDTO dept) {
         Pageable pageable = dept.buildPageable();
         return deptRepo.selectDeptList(dept, pageable);
     }
@@ -60,7 +59,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
      */
     @Override
     public List<TreeSelect> selectDeptTreeList(SysDeptDTO dept) {
-        List<SysDept> depts = SpringUtils.getAopProxy(this).selectDeptList(dept).getContent();
+        List<SysDept> depts = SpringUtils.getAopProxy(this).selectDeptPaged(dept).getContent();
         return buildDeptTreeSelect(depts.stream().map(SysDeptConvertor::toDTO).collect(Collectors.toList()));
     }
 
@@ -183,7 +182,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
         if (!SysUser.isAdmin(SecurityUtils.getUserId())) {
             SysDeptDTO dept = new SysDeptDTO();
             dept.setDeptId(deptId);
-            Page<SysDept> depts = SpringUtils.getAopProxy(this).selectDeptList(dept);
+            Page<SysDept> depts = SpringUtils.getAopProxy(this).selectDeptPaged(dept);
             if (depts.getContent().isEmpty()) {
                 throw new ServiceException("没有权限访问部门数据！");
             }

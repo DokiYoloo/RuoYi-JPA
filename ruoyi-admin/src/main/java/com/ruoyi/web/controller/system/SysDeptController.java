@@ -43,7 +43,7 @@ public class SysDeptController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:dept:list')")
     @GetMapping("/list")
     public ResponseEntity<List<SysDeptDTO>> list(SysDeptDTO dept) {
-        Page<SysDept> depts = deptService.selectDeptList(dept);
+        Page<SysDept> depts = deptService.selectDeptPaged(dept);
         return ResponseEntity.successful(depts.map(SysDeptConvertor::toDTO).getContent());
     }
 
@@ -53,7 +53,7 @@ public class SysDeptController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:dept:list')")
     @GetMapping("/list/exclude/{deptId}")
     public ResponseEntity<List<SysDeptDTO>> excludeChild(@PathVariable(value = "deptId", required = false) Long deptId) {
-        List<SysDeptDTO> depts = deptService.selectDeptList(new SysDeptDTO().queryMax()).map(SysDeptConvertor::toDTO).getContent();
+        List<SysDeptDTO> depts = deptService.selectDeptPaged(new SysDeptDTO()).map(SysDeptConvertor::toDTO).getContent();
         depts.removeIf(d -> d.getDeptId().intValue() == deptId || ArrayUtils.contains(StringUtils.split(d.getAncestors(), ","), deptId + ""));
         return ResponseEntity.successful(depts);
     }

@@ -45,7 +45,6 @@ public interface ISysConfigService {
      * 新增参数配置
      *
      * @param config 参数配置信息
-     * @return 结果
      */
     void insertConfig(SysConfigDTO config);
 
@@ -53,7 +52,6 @@ public interface ISysConfigService {
      * 修改参数配置
      *
      * @param config 参数配置信息
-     * @return 结果
      */
     void updateConfig(SysConfigDTO config);
 
