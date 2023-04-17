@@ -108,7 +108,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
     @Override
     public List<Long> selectDeptListByRoleId(Long roleId) {
         SysRole role = roleRepo.findById(roleId).orElseThrow(() -> new ServiceException("角色不存在"));
-        return deptRepo.selectDeptListByRoleId(roleId, role.isDeptCheckStrictly());
+        return deptRepo.findDeptListByRoleId(roleId, role.isDeptCheckStrictly());
     }
 
     /**
@@ -119,7 +119,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
      */
     @Override
     public SysDept selectDeptById(Long deptId) {
-        return deptRepo.selectDeptById(deptId);
+        return deptRepo.findDeptById(deptId);
     }
 
     /**
@@ -130,7 +130,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
      */
     @Override
     public int selectNormalChildrenDeptById(Long deptId) {
-        return deptRepo.selectNormalChildrenDeptById(deptId);
+        return deptRepo.findNormalChildrenDeptById(deptId);
     }
 
     /**
@@ -198,7 +198,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
      */
     @Override
     public void insertDept(SysDeptDTO dept) {
-        SysDept info = deptRepo.selectDeptById(dept.getParentId());
+        SysDept info = deptRepo.findDeptById(dept.getParentId());
         // 如果父节点不为正常状态,则不允许新增子节点
         if (!UserConstants.DEPT_NORMAL.equals(info.getStatus())) {
             throw new ServiceException("部门停用，不允许新增");
@@ -217,8 +217,8 @@ public class SysDeptServiceImpl implements ISysDeptService {
      */
     @Override
     public void updateDept(SysDeptDTO dept) {
-        SysDept newParentDept = deptRepo.selectDeptById(dept.getParentId());
-        SysDept oldDept = deptRepo.selectDeptById(dept.getDeptId());
+        SysDept newParentDept = deptRepo.findDeptById(dept.getParentId());
+        SysDept oldDept = deptRepo.findDeptById(dept.getDeptId());
         if (StringUtils.isNotNull(newParentDept) && StringUtils.isNotNull(oldDept)) {
             String newAncestors = newParentDept.getAncestors() + "," + newParentDept.getDeptId();
             String oldAncestors = oldDept.getAncestors();
@@ -254,7 +254,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
      * @param oldAncestors 旧的父ID集合
      */
     public void updateDeptChildren(Long deptId, String newAncestors, String oldAncestors) {
-        List<SysDept> children = deptRepo.selectChildrenDeptById(deptId);
+        List<SysDept> children = deptRepo.findChildrenDeptById(deptId);
         for (SysDept child : children) {
             child.setAncestors(child.getAncestors().replaceFirst(oldAncestors, newAncestors));
         }

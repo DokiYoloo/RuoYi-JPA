@@ -4,6 +4,7 @@ import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.core.domain.BaseEntity;
 import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.entity.dto.SysRoleDTO;
 import com.ruoyi.common.core.domain.entity.dto.SysUserDTO;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.text.Convert;
@@ -89,7 +90,7 @@ public class DataScopeAspect {
         StringBuilder sqlString = new StringBuilder();
         List<String> conditions = new ArrayList<>();
 
-        for (SysRole role : user.getRoles()) {
+        for (SysRoleDTO role : user.getRoles()) {
             String dataScope = role.getDataScope();
             if (!DATA_SCOPE_CUSTOM.equals(dataScope) && conditions.contains(dataScope)) {
                 continue;
