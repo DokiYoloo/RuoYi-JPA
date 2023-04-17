@@ -1,4 +1,4 @@
-package com.ruoyi.system.domain.convertor;
+package com.ruoyi.common.core.domain.convertor;
 
 import com.ruoyi.common.core.domain.entity.SysDept;
 import com.ruoyi.common.core.domain.entity.dto.SysDeptDTO;

@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.ruoyi.common.core.domain.ResponseEntity;
 import com.ruoyi.common.core.domain.entity.dto.SysDeptDTO;
-import com.ruoyi.system.domain.convertor.SysDeptConvertor;
+import com.ruoyi.common.core.domain.convertor.SysDeptConvertor;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.data.domain.Page;

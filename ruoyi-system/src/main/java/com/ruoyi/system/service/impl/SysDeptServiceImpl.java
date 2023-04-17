@@ -12,7 +12,7 @@ import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.spring.SpringUtils;
-import com.ruoyi.system.domain.convertor.SysDeptConvertor;
+import com.ruoyi.common.core.domain.convertor.SysDeptConvertor;
 import com.ruoyi.system.repository.SysDeptRepository;
 import com.ruoyi.system.repository.SysRoleRepository;
 import com.ruoyi.system.service.ISysDeptService;
@@ -193,7 +193,6 @@ public class SysDeptServiceImpl implements ISysDeptService {
      * 新增保存部门信息
      *
      * @param dept 部门信息
-     * @return 结果
      */
     @Override
     public void insertDept(SysDeptDTO dept) {
@@ -212,7 +211,6 @@ public class SysDeptServiceImpl implements ISysDeptService {
      * 修改保存部门信息
      *
      * @param dept 部门信息
-     * @return 结果
      */
     @Override
     public void updateDept(SysDeptDTO dept) {
@@ -266,7 +264,6 @@ public class SysDeptServiceImpl implements ISysDeptService {
      * 删除部门管理信息
      *
      * @param deptId 部门ID
-     * @return 结果
      */
     @Override
     public void deleteDeptById(Long deptId) {

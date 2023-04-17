@@ -104,7 +104,6 @@ public interface ISysDeptService {
      * 新增保存部门信息
      *
      * @param dept 部门信息
-     * @return 结果
      */
     void insertDept(SysDeptDTO dept);
 
@@ -112,7 +111,6 @@ public interface ISysDeptService {
      * 修改保存部门信息
      *
      * @param dept 部门信息
-     * @return 结果
      */
     void updateDept(SysDeptDTO dept);
 
@@ -120,7 +118,6 @@ public interface ISysDeptService {
      * 删除部门管理信息
      *
      * @param deptId 部门ID
-     * @return 结果
      */
     void deleteDeptById(Long deptId);
 }

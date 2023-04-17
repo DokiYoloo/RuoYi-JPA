@@ -36,51 +36,55 @@ public class SysDept extends BaseEntity {
     /**
      * 父部门ID
      */
+    @Column
     private Long parentId;
 
     /**
      * 祖级列表
      */
+    @Column(length = 150)
     private String ancestors;
 
     /**
      * 部门名称
      */
+    @Column(length = 50)
     private String deptName;
 
     /**
      * 显示顺序
      */
+    @Column
     private Integer orderNum;
 
     /**
      * 负责人
      */
+    @Column(length = 30)
     private String leader;
 
     /**
      * 联系电话
      */
+    @Column(length = 20)
     private String phone;
 
     /**
      * 邮箱
      */
+    @Column(length = 30)
     private String email;
 
     /**
      * 部门状态:0正常,1停用
      */
+    @Column(length = 2)
     private String status;
 
     /**
      * 删除标志（0代表存在 2代表删除）
      */
+    @Column(length = 2)
     private String delFlag;
-
-    /**
-     * 父部门名称
-     */
-    private String parentName;
 
 }
