@@ -1,5 +1,6 @@
 package com.ruoyi.common.core.domain.entity.dto;
 
+import com.ruoyi.common.core.page.BasePageQuery;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -19,7 +20,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class SysDeptDTO {
+public class SysDeptDTO extends BasePageQuery {
 
     /**
      * 部门ID

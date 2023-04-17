@@ -42,6 +42,10 @@ public class ResponseEntity<T> {
         return ResponseEntity.<M>success().setData(data);
     }
 
+    public static <M> ResponseEntity<M> warn(String message) {
+        return ResponseEntity.<M>error().setCode(HttpStatus.WARN).setMessage(message);
+    }
+
     public static <M> ResponseEntity<M> failed(int code, String message) {
         return ResponseEntity.<M>error().setCode(code).setMessage(message);
     }

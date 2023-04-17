@@ -9,6 +9,7 @@ import com.ruoyi.common.core.domain.convertor.SysUserConvertor;
 import com.ruoyi.common.core.domain.entity.SysDept;
 import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.entity.dto.SysDeptDTO;
 import com.ruoyi.common.core.domain.entity.dto.SysRoleDTO;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -229,7 +230,7 @@ public class SysRoleController extends BaseController {
     public AjaxResult deptTree(@PathVariable("roleId") Long roleId) {
         AjaxResult ajax = AjaxResult.success();
         ajax.put("checkedKeys", deptService.selectDeptListByRoleId(roleId));
-        ajax.put("depts", deptService.selectDeptTreeList(new SysDept()));
+        ajax.put("depts", deptService.selectDeptTreeList(new SysDeptDTO()));
         return ajax;
     }
 }

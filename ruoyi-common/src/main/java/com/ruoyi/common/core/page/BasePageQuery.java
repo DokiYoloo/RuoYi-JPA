@@ -94,4 +94,10 @@ public class BasePageQuery extends BaseEntity {
         return PageRequest.of(Math.max(this.pageNum - 1, 0), this.pageSize);
     }
 
+    public <T extends BasePageQuery> T queryMax() {
+        this.pageNum = 0;
+        this.pageSize = 999999;
+        return (T) this;
+    }
+
 }
