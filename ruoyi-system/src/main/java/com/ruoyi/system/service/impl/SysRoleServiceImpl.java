@@ -13,10 +13,11 @@ import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.domain.SysRoleDept;
 import com.ruoyi.system.domain.SysRoleMenu;
 import com.ruoyi.system.domain.SysUserRole;
-import com.ruoyi.system.mapper.SysUserRoleMapper;
+import com.ruoyi.system.domain.dto.SysUserRoleDTO;
 import com.ruoyi.system.repository.SysRoleDeptRepository;
 import com.ruoyi.system.repository.SysRoleMenuRepository;
 import com.ruoyi.system.repository.SysRoleRepository;
+import com.ruoyi.system.repository.SysUserRoleRepository;
 import com.ruoyi.system.service.ISysRoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -42,7 +43,7 @@ import static com.ruoyi.common.utils.SecurityUtils.getUsername;
 public class SysRoleServiceImpl implements ISysRoleService {
     private final SysRoleRepository sysRoleRepo;
     private final SysRoleMenuRepository roleMenuRepo;
-    private final SysUserRoleMapper userRoleMapper;
+    private final SysUserRoleRepository userRoleRepo;
     private final SysRoleDeptRepository roleDeptRepo;
 
     /**
@@ -203,7 +204,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
      */
     @Override
     public int countUserRoleByRoleId(Long roleId) {
-        return userRoleMapper.countUserRoleByRoleId(roleId);
+        return userRoleRepo.countUserRoleByRoleId(roleId);
     }
 
     /**
@@ -316,6 +317,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
         roleMenuRepo.deleteRoleMenuByRoleId(roleId);
         // 删除角色与部门关联
         roleDeptRepo.deleteRoleDeptByRoleId(roleId);
+        // TODO use logic del
         sysRoleRepo.deleteById(roleId);
     }
 
@@ -339,6 +341,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
         roleMenuRepo.deleteRoleMenu(roleIds);
         // 删除角色与部门关联
         roleDeptRepo.deleteRoleDept(roleIds);
+        // TODO use logic del
         sysRoleRepo.deleteAllById(Arrays.asList(roleIds));
     }
 
@@ -346,11 +349,10 @@ public class SysRoleServiceImpl implements ISysRoleService {
      * 取消授权用户角色
      *
      * @param userRole 用户和角色关联信息
-     * @return 结果
      */
     @Override
-    public int deleteAuthUser(SysUserRole userRole) {
-        return userRoleMapper.deleteUserRoleInfo(userRole);
+    public void deleteAuthUser(SysUserRoleDTO userRole) {
+        userRoleRepo.deleteUserRoleInfo(userRole.getRoleId(), userRole.getUserId());
     }
 
     /**
@@ -361,8 +363,8 @@ public class SysRoleServiceImpl implements ISysRoleService {
      * @return 结果
      */
     @Override
-    public int deleteAuthUsers(Long roleId, Long[] userIds) {
-        return userRoleMapper.deleteUserRoleInfos(roleId, userIds);
+    public void deleteAuthUsers(Long roleId, Long[] userIds) {
+        userRoleRepo.deleteUserRoleInfos(roleId, userIds);
     }
 
     /**
@@ -370,18 +372,17 @@ public class SysRoleServiceImpl implements ISysRoleService {
      *
      * @param roleId  角色ID
      * @param userIds 需要授权的用户数据ID
-     * @return 结果
      */
     @Override
-    public int insertAuthUsers(Long roleId, Long[] userIds) {
+    public void insertAuthUsers(Long roleId, Long[] userIds) {
         // 新增用户与角色管理
-        List<SysUserRole> list = new ArrayList<SysUserRole>();
+        List<SysUserRole> list = new ArrayList<>();
         for (Long userId : userIds) {
             SysUserRole ur = new SysUserRole();
             ur.setUserId(userId);
             ur.setRoleId(roleId);
             list.add(ur);
         }
-        return userRoleMapper.batchUserRole(list);
+        userRoleRepo.saveBatch(list);
     }
 }

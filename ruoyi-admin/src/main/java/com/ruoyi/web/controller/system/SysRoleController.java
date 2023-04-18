@@ -19,6 +19,7 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.service.SysPermissionService;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.domain.SysUserRole;
+import com.ruoyi.system.domain.dto.SysUserRoleDTO;
 import com.ruoyi.system.service.ISysDeptService;
 import com.ruoyi.system.service.ISysRoleService;
 import com.ruoyi.system.service.ISysUserService;
@@ -195,7 +196,7 @@ public class SysRoleController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:role:edit')")
     @Log(title = "角色管理", businessType = BusinessType.GRANT)
     @PutMapping("/authUser/cancel")
-    public ResponseEntity<Void> cancelAuthUser(@RequestBody SysUserRole userRole) {
+    public ResponseEntity<Void> cancelAuthUser(@RequestBody SysUserRoleDTO userRole) {
         return ResponseEntity.deduce(() -> roleService.deleteAuthUser(userRole));
     }
 

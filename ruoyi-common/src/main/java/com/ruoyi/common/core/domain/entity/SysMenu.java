@@ -1,6 +1,6 @@
 package com.ruoyi.common.core.domain.entity;
 
-import com.ruoyi.common.core.domain.BaseEntity;
+import com.ruoyi.common.core.domain.JpaBaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class SysMenu extends BaseEntity {
+public class SysMenu extends JpaBaseEntity {
     private static final long serialVersionUID = 1L;
 
     /**

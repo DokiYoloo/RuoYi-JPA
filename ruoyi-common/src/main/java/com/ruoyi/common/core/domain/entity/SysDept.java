@@ -1,6 +1,5 @@
 package com.ruoyi.common.core.domain.entity;
 
-import com.ruoyi.common.core.domain.BaseEntity;
 import com.ruoyi.common.core.domain.JpaBaseEntity;
 import lombok.Getter;
 import lombok.Setter;
@@ -43,13 +42,13 @@ public class SysDept extends JpaBaseEntity {
     /**
      * 祖级列表
      */
-    @Column(length = 150)
+    @Column(length = 50)
     private String ancestors;
 
     /**
      * 部门名称
      */
-    @Column(length = 50)
+    @Column(length = 30)
     private String deptName;
 
     /**

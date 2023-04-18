@@ -14,11 +14,11 @@ import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.domain.SysPost;
 import com.ruoyi.system.domain.SysUserPost;
 import com.ruoyi.system.domain.SysUserRole;
-import com.ruoyi.system.mapper.SysUserRoleMapper;
 import com.ruoyi.system.repository.SysPostRepository;
 import com.ruoyi.system.repository.SysRoleRepository;
 import com.ruoyi.system.repository.SysUserPostRepository;
 import com.ruoyi.system.repository.SysUserRepository;
+import com.ruoyi.system.repository.SysUserRoleRepository;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysUserService;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +46,7 @@ public class SysUserServiceImpl implements ISysUserService {
     private final SysUserRepository userRepo;
     private final SysRoleRepository roleRepo;
     private final SysPostRepository sysPostRepo;
-    private final SysUserRoleMapper userRoleMapper;
+    private final SysUserRoleRepository userRoleRepo;
     private final SysUserPostRepository userPostRepo;
     private final ISysConfigService configService;
     protected final Validator validator;
@@ -263,7 +263,7 @@ public class SysUserServiceImpl implements ISysUserService {
         user.setUpdateBy(SecurityUtils.getUsername());
         Long userId = user.getUserId();
         // 删除用户与角色关联
-        userRoleMapper.deleteUserRoleByUserId(userId);
+        userRoleRepo.deleteUserRoleByUserId(userId);
         // 新增用户与角色管理
         insertUserRole(user);
         // 删除用户与岗位关联
@@ -283,7 +283,7 @@ public class SysUserServiceImpl implements ISysUserService {
     @Override
     @Transactional
     public void insertUserAuth(Long userId, Long[] roleIds) {
-        userRoleMapper.deleteUserRoleByUserId(userId);
+        userRoleRepo.deleteUserRoleByUserId(userId);
         insertUserRole(userId, roleIds);
     }
 
@@ -393,7 +393,7 @@ public class SysUserServiceImpl implements ISysUserService {
                 ur.setRoleId(roleId);
                 list.add(ur);
             }
-            userRoleMapper.batchUserRole(list);
+            userRoleRepo.saveBatch(list);
         }
     }
 
@@ -407,7 +407,7 @@ public class SysUserServiceImpl implements ISysUserService {
     @Transactional
     public void deleteUserById(Long userId) {
         // 删除用户与角色关联
-        userRoleMapper.deleteUserRoleByUserId(userId);
+        userRoleRepo.deleteUserRoleByUserId(userId);
         // 删除用户与岗位表
         userPostRepo.deleteUserPostByUserId(userId);
         userRepo.deleteUserById(userId);
@@ -426,7 +426,7 @@ public class SysUserServiceImpl implements ISysUserService {
             checkUserDataScope(userId);
         }
         // 删除用户与角色关联
-        userRoleMapper.deleteUserRole(userIds);
+        userRoleRepo.deleteUserRole(userIds);
         // 删除用户与岗位关联
         userPostRepo.deleteUserPost(userIds);
         userRepo.deleteUserByIds(userIds);

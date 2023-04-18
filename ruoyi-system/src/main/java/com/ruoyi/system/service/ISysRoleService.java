@@ -3,6 +3,7 @@ package com.ruoyi.system.service;
 import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.core.domain.entity.dto.SysRoleDTO;
 import com.ruoyi.system.domain.SysUserRole;
+import com.ruoyi.system.domain.dto.SysUserRoleDTO;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -103,7 +104,6 @@ public interface ISysRoleService {
      * 新增保存角色信息
      *
      * @param role 角色信息
-     * @return 结果
      */
     void insertRole(SysRoleDTO role);
 
@@ -111,7 +111,6 @@ public interface ISysRoleService {
      * 修改保存角色信息
      *
      * @param role 角色信息
-     * @return 结果
      */
     void updateRole(SysRoleDTO role);
 
@@ -147,25 +146,22 @@ public interface ISysRoleService {
      * 取消授权用户角色
      *
      * @param userRole 用户和角色关联信息
-     * @return 结果
      */
-    int deleteAuthUser(SysUserRole userRole);
+    void deleteAuthUser(SysUserRoleDTO userRole);
 
     /**
      * 批量取消授权用户角色
      *
      * @param roleId  角色ID
      * @param userIds 需要取消授权的用户数据ID
-     * @return 结果
      */
-    int deleteAuthUsers(Long roleId, Long[] userIds);
+    void deleteAuthUsers(Long roleId, Long[] userIds);
 
     /**
      * 批量选择授权用户角色
      *
      * @param roleId  角色ID
      * @param userIds 需要删除的用户数据ID
-     * @return 结果
      */
-    int insertAuthUsers(Long roleId, Long[] userIds);
+    void insertAuthUsers(Long roleId, Long[] userIds);
 }
