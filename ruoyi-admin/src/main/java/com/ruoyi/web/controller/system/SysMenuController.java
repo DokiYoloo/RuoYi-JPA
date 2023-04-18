@@ -120,13 +120,13 @@ public class SysMenuController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:menu:remove')")
     @Log(title = "菜单管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/{menuId}")
-    public AjaxResult remove(@PathVariable("menuId") Long menuId) {
+    public ResponseEntity<Void> remove(@PathVariable("menuId") Long menuId) {
         if (menuService.hasChildByMenuId(menuId)) {
-            return warn("存在子菜单,不允许删除");
+            return ResponseEntity.warn("存在子菜单,不允许删除");
         }
         if (menuService.checkMenuExistRole(menuId)) {
-            return warn("菜单已分配,不允许删除");
+            return ResponseEntity.warn("菜单已分配,不允许删除");
         }
-        return toAjax(menuService.deleteMenuById(menuId));
+        return ResponseEntity.deduce(() -> menuService.deleteMenuById(menuId));
     }
 }
