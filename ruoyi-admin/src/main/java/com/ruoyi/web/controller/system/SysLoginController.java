@@ -3,7 +3,10 @@ package com.ruoyi.web.controller.system;
 import java.util.List;
 import java.util.Set;
 
+import com.ruoyi.common.core.domain.ResponseEntity;
+import com.ruoyi.common.core.domain.entity.dto.SysMenuDTO;
 import com.ruoyi.common.core.domain.entity.dto.SysUserDTO;
+import com.ruoyi.system.domain.vo.RouterVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -73,9 +76,9 @@ public class SysLoginController {
      * @return 路由信息
      */
     @GetMapping("getRouters")
-    public AjaxResult getRouters() {
+    public ResponseEntity<List<RouterVo>> getRouters() {
         Long userId = SecurityUtils.getUserId();
-        List<SysMenu> menus = menuService.selectMenuTreeByUserId(userId);
-        return AjaxResult.success(menuService.buildMenus(menus));
+        List<SysMenuDTO> menus = menuService.selectMenuTreeByUserId(userId);
+        return ResponseEntity.successful(menuService.buildMenus(menus));
     }
 }

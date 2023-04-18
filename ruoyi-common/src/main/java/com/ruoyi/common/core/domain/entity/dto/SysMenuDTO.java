@@ -1,5 +1,6 @@
 package com.ruoyi.common.core.domain.entity.dto;
 
+import com.ruoyi.common.core.domain.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -18,7 +19,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class SysMenuDTO {
+public class SysMenuDTO extends BaseEntity {
 
     /**
      * 菜单ID

@@ -5,14 +5,23 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
+
+import static javax.persistence.GenerationType.IDENTITY;
 
 /**
  * 菜单权限表 sys_menu
  *
  * @author ruoyi
  */
+@Entity
+@Table
 @Getter
 @Setter
 @ToString
@@ -22,6 +31,9 @@ public class SysMenu extends JpaBaseEntity {
     /**
      * 菜单ID
      */
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(unique = true, nullable = false)
     private Long menuId;
 
     /**

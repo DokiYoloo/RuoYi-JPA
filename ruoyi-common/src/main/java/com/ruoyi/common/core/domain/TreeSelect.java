@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ruoyi.common.core.domain.entity.SysDept;
 import com.ruoyi.common.core.domain.entity.SysMenu;
 import com.ruoyi.common.core.domain.entity.dto.SysDeptDTO;
+import com.ruoyi.common.core.domain.entity.dto.SysMenuDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -47,7 +48,7 @@ public class TreeSelect implements Serializable {
         this.children = dept.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
-    public TreeSelect(SysMenu menu) {
+    public TreeSelect(SysMenuDTO menu) {
         this.id = menu.getMenuId();
         this.label = menu.getMenuName();
         this.children = menu.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());

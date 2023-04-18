@@ -1,6 +1,7 @@
 package com.ruoyi.system.mapper;
 
 import com.ruoyi.common.core.domain.entity.SysMenu;
+import com.ruoyi.common.core.domain.entity.dto.SysMenuDTO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public interface SysMenuMapper {
      * @param menu 菜单信息
      * @return 菜单列表
      */
-    public List<SysMenu> selectMenuList(SysMenu menu);
+    public List<SysMenu> selectMenuList(SysMenuDTO menu);
 
     /**
      * 根据用户所有权限
@@ -32,7 +33,7 @@ public interface SysMenuMapper {
      * @param menu 菜单信息
      * @return 菜单列表
      */
-    public List<SysMenu> selectMenuListByUserId(SysMenu menu);
+    public List<SysMenu> selectMenuListByUserId(SysMenuDTO menu);
 
     /**
      * 根据角色ID查询权限
