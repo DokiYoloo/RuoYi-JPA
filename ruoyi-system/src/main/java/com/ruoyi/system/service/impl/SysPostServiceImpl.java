@@ -7,8 +7,8 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysPost;
 import com.ruoyi.system.domain.convertor.SysPostConvertor;
 import com.ruoyi.system.domain.dto.SysPostDTO;
-import com.ruoyi.system.mapper.SysUserPostMapper;
 import com.ruoyi.system.repository.SysPostRepository;
+import com.ruoyi.system.repository.SysUserPostRepository;
 import com.ruoyi.system.service.ISysPostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,7 +26,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class SysPostServiceImpl implements ISysPostService {
-    private final SysUserPostMapper userPostMapper;
+    private final SysUserPostRepository userPostRepo;
     private final SysPostRepository sysPostRepo;
 
     /**
@@ -113,7 +113,7 @@ public class SysPostServiceImpl implements ISysPostService {
      */
     @Override
     public int countUserPostById(Long postId) {
-        return userPostMapper.countUserPostById(postId);
+        return userPostRepo.countUserPostById(postId);
     }
 
     /**

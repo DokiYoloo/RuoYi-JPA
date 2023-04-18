@@ -27,7 +27,6 @@ public class SysRoleMenu {
     /**
      * 角色ID
      */
-    @Id
     @Column(nullable = false)
     private Long roleId;
 

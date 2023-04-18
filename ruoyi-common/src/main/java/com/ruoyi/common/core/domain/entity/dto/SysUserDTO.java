@@ -6,6 +6,7 @@ import com.ruoyi.common.annotation.Excel.Type;
 import com.ruoyi.common.annotation.Excels;
 import com.ruoyi.common.core.domain.entity.SysDept;
 import com.ruoyi.common.core.domain.entity.SysRole;
+import com.ruoyi.common.core.page.BasePageQuery;
 import com.ruoyi.common.xss.Xss;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,7 +26,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class SysUserDTO {
+public class SysUserDTO extends BasePageQuery {
 
     /**
      * 用户ID

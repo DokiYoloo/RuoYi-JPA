@@ -4,6 +4,7 @@ import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.entity.dto.SysUserDTO;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.exception.ServiceException;
@@ -147,7 +148,7 @@ public class SysLoginService {
      * @param userId 用户ID
      */
     public void recordLoginInfo(Long userId) {
-        SysUser sysUser = new SysUser();
+        SysUserDTO sysUser = new SysUserDTO();
         sysUser.setUserId(userId);
         sysUser.setLoginIp(IpUtils.getIpAddr());
         sysUser.setLoginDate(DateUtils.getNowDate());

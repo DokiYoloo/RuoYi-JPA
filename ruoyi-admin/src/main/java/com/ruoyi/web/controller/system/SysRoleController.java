@@ -6,11 +6,11 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.ResponseEntity;
 import com.ruoyi.common.core.domain.convertor.SysRoleConvertor;
 import com.ruoyi.common.core.domain.convertor.SysUserConvertor;
-import com.ruoyi.common.core.domain.entity.SysDept;
 import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.entity.dto.SysDeptDTO;
 import com.ruoyi.common.core.domain.entity.dto.SysRoleDTO;
+import com.ruoyi.common.core.domain.entity.dto.SysUserDTO;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
@@ -174,10 +174,9 @@ public class SysRoleController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:role:list')")
     @GetMapping("/authUser/allocatedList")
-    public TableDataInfo allocatedList(SysUser user) {
-        startPage();
-        List<SysUser> list = userService.selectAllocatedList(user);
-        return getDataTable(list);
+    public TableDataInfo<SysUserDTO> allocatedList(SysUserDTO user) {
+        Page<SysUser> paged = userService.selectAllocatedPaged(user);
+        return getDataTable(paged.map(SysUserConvertor::toDTO));
     }
 
     /**
@@ -185,10 +184,9 @@ public class SysRoleController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:role:list')")
     @GetMapping("/authUser/unallocatedList")
-    public TableDataInfo unallocatedList(SysUser user) {
-        startPage();
-        List<SysUser> list = userService.selectUnallocatedList(user);
-        return getDataTable(list);
+    public TableDataInfo<SysUserDTO> unallocatedList(SysUserDTO user) {
+        Page<SysUser> paged = userService.selectUnallocatedPaged(user);
+        return getDataTable(paged.map(SysUserConvertor::toDTO));
     }
 
     /**
