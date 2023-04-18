@@ -5,11 +5,21 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import static javax.persistence.GenerationType.IDENTITY;
+
 /**
  * 字典类型表 sys_dict_type
  *
  * @author ruoyi
  */
+@Entity
+@Table
 @Getter
 @Setter
 @ToString
@@ -19,6 +29,9 @@ public class SysDictType extends BaseEntity {
     /**
      * 字典主键
      */
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(unique = true, nullable = false)
     private Long dictId;
 
     /**

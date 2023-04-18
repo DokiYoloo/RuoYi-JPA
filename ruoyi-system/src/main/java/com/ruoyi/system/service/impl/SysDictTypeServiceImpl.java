@@ -1,16 +1,20 @@
 package com.ruoyi.system.service.impl;
 
 import com.ruoyi.common.constant.UserConstants;
+import com.ruoyi.common.core.domain.convertor.SysDictTypeConvertor;
 import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.domain.entity.SysDictType;
 import com.ruoyi.common.core.domain.entity.dto.SysDictDataDTO;
+import com.ruoyi.common.core.domain.entity.dto.SysDictTypeDTO;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DictUtils;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.system.mapper.SysDictTypeMapper;
 import com.ruoyi.system.repository.SysDictDataRepository;
+import com.ruoyi.system.repository.SysDictTypeRepository;
 import com.ruoyi.system.service.ISysDictTypeService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,12 +31,10 @@ import java.util.stream.Collectors;
  * @author ruoyi
  */
 @Service
+@RequiredArgsConstructor
 public class SysDictTypeServiceImpl implements ISysDictTypeService {
-    @Autowired
-    private SysDictTypeMapper dictTypeMapper;
-
-    @Autowired
-    private SysDictDataRepository dictDataRepo;
+    private final SysDictTypeRepository dictTypeRepo;
+    private final SysDictDataRepository dictDataRepo;
 
     /**
      * 项目启动时，初始化字典到缓存
@@ -49,8 +51,9 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService {
      * @return 字典类型集合信息
      */
     @Override
-    public List<SysDictType> selectDictTypeList(SysDictType dictType) {
-        return dictTypeMapper.selectDictTypeList(dictType);
+    public Page<SysDictType> selectDictTypePaged(SysDictTypeDTO dictType) {
+        Pageable pageable = dictType.buildPageable();
+        return dictTypeRepo.findDictTypePaged(dictType, pageable);
     }
 
     /**
@@ -60,7 +63,7 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService {
      */
     @Override
     public List<SysDictType> selectDictTypeAll() {
-        return dictTypeMapper.selectDictTypeAll();
+        return dictTypeRepo.findAll();
     }
 
     /**
@@ -91,18 +94,7 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService {
      */
     @Override
     public SysDictType selectDictTypeById(Long dictId) {
-        return dictTypeMapper.selectDictTypeById(dictId);
-    }
-
-    /**
-     * 根据字典类型查询信息
-     *
-     * @param dictType 字典类型
-     * @return 字典类型
-     */
-    @Override
-    public SysDictType selectDictTypeByType(String dictType) {
-        return dictTypeMapper.selectDictTypeByType(dictType);
+        return dictTypeRepo.findDictTypeById(dictId);
     }
 
     /**
@@ -117,7 +109,7 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService {
             if (dictDataRepo.countDictDataByType(dictType.getDictType()) > 0) {
                 throw new ServiceException(String.format("%1$s已分配,不能删除", dictType.getDictName()));
             }
-            dictTypeMapper.deleteDictTypeById(dictId);
+            dictTypeRepo.deleteById(dictId);
             DictUtils.removeDictCache(dictType.getDictType());
         }
     }
@@ -157,34 +149,30 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService {
      * 新增保存字典类型信息
      *
      * @param dict 字典类型信息
-     * @return 结果
      */
     @Override
-    public int insertDictType(SysDictType dict) {
-        int row = dictTypeMapper.insertDictType(dict);
-        if (row > 0) {
-            DictUtils.setDictCache(dict.getDictType(), null);
-        }
-        return row;
+    public void insertDictType(SysDictTypeDTO dict) {
+        SysDictType dictType = SysDictTypeConvertor.toPO(dict);
+        dictType.setCreateBy(SecurityUtils.getUsername());
+        dictTypeRepo.save(dictType);
+        DictUtils.setDictCache(dict.getDictType(), null);
     }
 
     /**
      * 修改保存字典类型信息
      *
      * @param dict 字典类型信息
-     * @return 结果
      */
     @Override
     @Transactional
-    public int updateDictType(SysDictType dict) {
-        SysDictType oldDict = dictTypeMapper.selectDictTypeById(dict.getDictId());
+    public void updateDictType(SysDictTypeDTO dict) {
+        SysDictType dictType = SysDictTypeConvertor.toPO(dict);
+        dictType.setUpdateBy(SecurityUtils.getUsername());
+        SysDictType oldDict = dictTypeRepo.findDictTypeById(dict.getDictId());
         dictDataRepo.updateDictDataType(oldDict.getDictType(), dict.getDictType());
-        int row = dictTypeMapper.updateDictType(dict);
-        if (row > 0) {
-            List<SysDictData> dictDatas = dictDataRepo.findByType(dict.getDictType());
-            DictUtils.setDictCache(dict.getDictType(), dictDatas);
-        }
-        return row;
+        dictTypeRepo.save(dictType);
+        List<SysDictData> dictDatas = dictDataRepo.findByType(dict.getDictType());
+        DictUtils.setDictCache(dict.getDictType(), dictDatas);
     }
 
     /**
@@ -194,10 +182,10 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService {
      * @return 结果
      */
     @Override
-    public boolean checkDictTypeUnique(SysDictType dict) {
-        Long dictId = StringUtils.isNull(dict.getDictId()) ? -1L : dict.getDictId();
-        SysDictType dictType = dictTypeMapper.checkDictTypeUnique(dict.getDictType());
-        if (StringUtils.isNotNull(dictType) && dictType.getDictId().longValue() != dictId.longValue()) {
+    public boolean checkDictTypeUnique(SysDictTypeDTO dict) {
+        long dictId = StringUtils.isNull(dict.getDictId()) ? -1L : dict.getDictId();
+        SysDictType dictType = dictTypeRepo.findFirstByDictType(dict.getDictType());
+        if (StringUtils.isNotNull(dictType) && dictType.getDictId() != dictId) {
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;

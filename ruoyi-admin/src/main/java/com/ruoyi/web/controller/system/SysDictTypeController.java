@@ -1,10 +1,14 @@
 package com.ruoyi.web.controller.system;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.core.domain.ResponseEntity;
+import com.ruoyi.common.core.domain.convertor.SysDictTypeConvertor;
+import com.ruoyi.common.core.domain.entity.dto.SysDictTypeDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysDictType;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
@@ -37,19 +40,19 @@ public class SysDictTypeController extends BaseController {
 
     @PreAuthorize("@ss.hasPermi('system:dict:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysDictType dictType) {
-        startPage();
-        List<SysDictType> list = dictTypeService.selectDictTypeList(dictType);
-        return getDataTable(list);
+    public TableDataInfo<SysDictTypeDTO> list(SysDictTypeDTO dictType) {
+        Page<SysDictType> paged = dictTypeService.selectDictTypePaged(dictType);
+        return getDataTable(paged.map(SysDictTypeConvertor::toDTO));
     }
 
     @Log(title = "字典类型", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:dict:export')")
     @PostMapping("/export")
-    public void export(HttpServletResponse response, SysDictType dictType) {
-        List<SysDictType> list = dictTypeService.selectDictTypeList(dictType);
-        ExcelUtil<SysDictType> util = new ExcelUtil<SysDictType>(SysDictType.class);
-        util.exportExcel(response, list, "字典类型");
+    public void export(HttpServletResponse response, SysDictTypeDTO dictType) {
+        Page<SysDictTypeDTO> paged = dictTypeService.selectDictTypePaged(dictType)
+                .map(SysDictTypeConvertor::toDTO);
+        ExcelUtil<SysDictTypeDTO> util = new ExcelUtil<>(SysDictTypeDTO.class);
+        util.exportExcel(response, paged.getContent(), "字典类型");
     }
 
     /**
@@ -57,8 +60,9 @@ public class SysDictTypeController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:dict:query')")
     @GetMapping(value = "/{dictId}")
-    public AjaxResult getInfo(@PathVariable Long dictId) {
-        return success(dictTypeService.selectDictTypeById(dictId));
+    public ResponseEntity<SysDictTypeDTO> getInfo(@PathVariable Long dictId) {
+        SysDictType dictType = dictTypeService.selectDictTypeById(dictId);
+        return ResponseEntity.successful(SysDictTypeConvertor.toDTO(dictType));
     }
 
     /**
@@ -67,12 +71,11 @@ public class SysDictTypeController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:dict:add')")
     @Log(title = "字典类型", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@Validated @RequestBody SysDictType dict) {
+    public ResponseEntity<Void> add(@Validated @RequestBody SysDictTypeDTO dict) {
         if (!dictTypeService.checkDictTypeUnique(dict)) {
-            return error("新增字典'" + dict.getDictName() + "'失败，字典类型已存在");
+            return ResponseEntity.failed("新增字典'" + dict.getDictName() + "'失败，字典类型已存在");
         }
-        dict.setCreateBy(getUsername());
-        return toAjax(dictTypeService.insertDictType(dict));
+        return ResponseEntity.deduce(() -> dictTypeService.insertDictType(dict));
     }
 
     /**
@@ -81,12 +84,11 @@ public class SysDictTypeController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:dict:edit')")
     @Log(title = "字典类型", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@Validated @RequestBody SysDictType dict) {
+    public ResponseEntity<Void> edit(@Validated @RequestBody SysDictTypeDTO dict) {
         if (!dictTypeService.checkDictTypeUnique(dict)) {
-            return error("修改字典'" + dict.getDictName() + "'失败，字典类型已存在");
+            return ResponseEntity.failed("修改字典'" + dict.getDictName() + "'失败，字典类型已存在");
         }
-        dict.setUpdateBy(getUsername());
-        return toAjax(dictTypeService.updateDictType(dict));
+        return ResponseEntity.deduce(() -> dictTypeService.updateDictType(dict));
     }
 
     /**
@@ -95,9 +97,8 @@ public class SysDictTypeController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:dict:remove')")
     @Log(title = "字典类型", businessType = BusinessType.DELETE)
     @DeleteMapping("/{dictIds}")
-    public AjaxResult remove(@PathVariable Long[] dictIds) {
-        dictTypeService.deleteDictTypeByIds(dictIds);
-        return success();
+    public ResponseEntity<Void> remove(@PathVariable Long[] dictIds) {
+        return ResponseEntity.deduce(() -> dictTypeService.deleteDictTypeByIds(dictIds));
     }
 
     /**
@@ -106,17 +107,17 @@ public class SysDictTypeController extends BaseController {
     @PreAuthorize("@ss.hasPermi('system:dict:remove')")
     @Log(title = "字典类型", businessType = BusinessType.CLEAN)
     @DeleteMapping("/refreshCache")
-    public AjaxResult refreshCache() {
-        dictTypeService.resetDictCache();
-        return success();
+    public ResponseEntity<Void> refreshCache() {
+        return ResponseEntity.deduce(dictTypeService::resetDictCache);
     }
 
     /**
      * 获取字典选择框列表
      */
     @GetMapping("/optionselect")
-    public AjaxResult optionselect() {
-        List<SysDictType> dictTypes = dictTypeService.selectDictTypeAll();
-        return success(dictTypes);
+    public ResponseEntity<List<SysDictTypeDTO>> optionselect() {
+        List<SysDictTypeDTO> dictTypes = dictTypeService.selectDictTypeAll()
+                .stream().map(SysDictTypeConvertor::toDTO).collect(Collectors.toList());
+        return ResponseEntity.successful(dictTypes);
     }
 }
