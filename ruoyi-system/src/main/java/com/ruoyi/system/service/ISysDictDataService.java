@@ -1,6 +1,8 @@
 package com.ruoyi.system.service;
 
 import com.ruoyi.common.core.domain.entity.SysDictData;
+import com.ruoyi.common.core.domain.entity.dto.SysDictDataDTO;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -16,7 +18,7 @@ public interface ISysDictDataService {
      * @param dictData 字典数据信息
      * @return 字典数据集合信息
      */
-    public List<SysDictData> selectDictDataList(SysDictData dictData);
+    Page<SysDictData> selectDictDataPaged(SysDictDataDTO dictData);
 
     /**
      * 根据字典类型和字典键值查询字典数据信息
@@ -46,15 +48,13 @@ public interface ISysDictDataService {
      * 新增保存字典数据信息
      *
      * @param dictData 字典数据信息
-     * @return 结果
      */
-    public int insertDictData(SysDictData dictData);
+    void insertDictData(SysDictDataDTO dictData);
 
     /**
      * 修改保存字典数据信息
      *
      * @param dictData 字典数据信息
-     * @return 结果
      */
-    public int updateDictData(SysDictData dictData);
+    void updateDictData(SysDictDataDTO dictData);
 }

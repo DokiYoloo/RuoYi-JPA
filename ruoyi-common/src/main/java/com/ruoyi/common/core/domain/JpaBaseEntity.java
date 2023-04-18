@@ -45,23 +45,24 @@ public class JpaBaseEntity {
     /**
      * 创建者
      */
-    @Column(name = "create_by", length = 150)
+    @Column(name = "create_by", length = 64)
     private String createBy;
 
     /**
      * 更新者
      */
-    @Column(name = "update_by", length = 150)
+    @Column(name = "update_by", length = 64)
     private String updateBy;
 
     /**
      * 备注
      */
-    @Column(name = "remark", length = 350)
+    @Column(name = "remark", length = 500)
     private String remark;
 
     /**
      * 兼容原BaseEntity,这不是一个数据库字段
+     * TODO 看上去没卵用 后面删掉
      */
     @Transient
     @JsonInclude(JsonInclude.Include.NON_EMPTY)

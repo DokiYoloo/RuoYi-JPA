@@ -2,6 +2,7 @@ package com.ruoyi.common.core.domain.entity.dto;
 
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.annotation.Excel.ColumnType;
+import com.ruoyi.common.core.page.BasePageQuery;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -17,7 +18,7 @@ import javax.validation.constraints.Size;
 @Getter
 @Setter
 @ToString
-public class SysDictDataDTO {
+public class SysDictDataDTO extends BasePageQuery {
 
     /**
      * 字典编码

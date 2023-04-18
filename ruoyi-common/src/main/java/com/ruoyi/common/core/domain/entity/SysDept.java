@@ -1,6 +1,7 @@
 package com.ruoyi.common.core.domain.entity;
 
 import com.ruoyi.common.core.domain.BaseEntity;
+import com.ruoyi.common.core.domain.JpaBaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -23,7 +24,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Getter
 @Setter
 @ToString
-public class SysDept extends BaseEntity {
+public class SysDept extends JpaBaseEntity {
 
     /**
      * 部门ID

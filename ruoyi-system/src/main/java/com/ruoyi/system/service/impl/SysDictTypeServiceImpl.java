@@ -3,13 +3,15 @@ package com.ruoyi.system.service.impl;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.domain.entity.SysDictType;
+import com.ruoyi.common.core.domain.entity.dto.SysDictDataDTO;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DictUtils;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.system.mapper.SysDictDataMapper;
 import com.ruoyi.system.mapper.SysDictTypeMapper;
+import com.ruoyi.system.repository.SysDictDataRepository;
 import com.ruoyi.system.service.ISysDictTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +32,7 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService {
     private SysDictTypeMapper dictTypeMapper;
 
     @Autowired
-    private SysDictDataMapper dictDataMapper;
+    private SysDictDataRepository dictDataRepo;
 
     /**
      * 项目启动时，初始化字典到缓存
@@ -73,7 +75,7 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService {
         if (StringUtils.isNotEmpty(dictDatas)) {
             return dictDatas;
         }
-        dictDatas = dictDataMapper.selectDictDataByType(dictType);
+        dictDatas = dictDataRepo.findByType(dictType);
         if (StringUtils.isNotEmpty(dictDatas)) {
             DictUtils.setDictCache(dictType, dictDatas);
             return dictDatas;
@@ -112,7 +114,7 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService {
     public void deleteDictTypeByIds(Long[] dictIds) {
         for (Long dictId : dictIds) {
             SysDictType dictType = selectDictTypeById(dictId);
-            if (dictDataMapper.countDictDataByType(dictType.getDictType()) > 0) {
+            if (dictDataRepo.countDictDataByType(dictType.getDictType()) > 0) {
                 throw new ServiceException(String.format("%1$s已分配,不能删除", dictType.getDictName()));
             }
             dictTypeMapper.deleteDictTypeById(dictId);
@@ -125,9 +127,10 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService {
      */
     @Override
     public void loadingDictCache() {
-        SysDictData dictData = new SysDictData();
+        SysDictDataDTO dictData = new SysDictDataDTO();
         dictData.setStatus("0");
-        Map<String, List<SysDictData>> dictDataMap = dictDataMapper.selectDictDataList(dictData).stream().collect(Collectors.groupingBy(SysDictData::getDictType));
+        Pageable pageable = dictData.buildPageable();
+        Map<String, List<SysDictData>> dictDataMap = dictDataRepo.findDictDataPaged(dictData, pageable).getContent().stream().collect(Collectors.groupingBy(SysDictData::getDictType));
         for (Map.Entry<String, List<SysDictData>> entry : dictDataMap.entrySet()) {
             DictUtils.setDictCache(entry.getKey(), entry.getValue().stream().sorted(Comparator.comparing(SysDictData::getDictSort)).collect(Collectors.toList()));
         }
@@ -175,10 +178,10 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService {
     @Transactional
     public int updateDictType(SysDictType dict) {
         SysDictType oldDict = dictTypeMapper.selectDictTypeById(dict.getDictId());
-        dictDataMapper.updateDictDataType(oldDict.getDictType(), dict.getDictType());
+        dictDataRepo.updateDictDataType(oldDict.getDictType(), dict.getDictType());
         int row = dictTypeMapper.updateDictType(dict);
         if (row > 0) {
-            List<SysDictData> dictDatas = dictDataMapper.selectDictDataByType(dict.getDictType());
+            List<SysDictData> dictDatas = dictDataRepo.findByType(dict.getDictType());
             DictUtils.setDictCache(dict.getDictType(), dictDatas);
         }
         return row;
