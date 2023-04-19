@@ -23,7 +23,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @Table(indexes = {
         @Index(columnList = "status"),
-        @Index(columnList = "login_time")
+        @Index(columnList = "loginTime")
 })
 @Getter
 @Setter

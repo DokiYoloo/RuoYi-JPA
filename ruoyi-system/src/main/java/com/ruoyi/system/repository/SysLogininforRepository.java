@@ -1,5 +1,6 @@
 package com.ruoyi.system.repository;
 
+import com.blinkfox.fenix.jpa.QueryFenix;
 import com.ruoyi.system.domain.SysLogininfor;
 import com.ruoyi.system.domain.dto.SysLogininforDTO;
 import org.springframework.data.domain.Page;
@@ -20,5 +21,6 @@ public interface SysLogininforRepository extends JpaRepository<SysLogininfor, Lo
      * @param logininfor 访问日志对象
      * @return 登录记录集合
      */
+    @QueryFenix
     Page<SysLogininfor> findPaged(SysLogininforDTO logininfor, Pageable pageable);
 }

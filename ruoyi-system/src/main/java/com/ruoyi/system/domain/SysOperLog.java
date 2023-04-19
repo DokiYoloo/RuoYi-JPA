@@ -21,9 +21,9 @@ import static javax.persistence.GenerationType.IDENTITY;
  * @author ruoyi
  */
 @Table(indexes = {
-        @Index(columnList = "business_type"),
+        @Index(columnList = "businessType"),
         @Index(columnList = "status"),
-        @Index(columnList = "oper_time")
+        @Index(columnList = "operTime")
 })
 @Entity
 @Getter
