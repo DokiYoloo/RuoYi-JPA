@@ -23,7 +23,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Getter
 @Setter
 @ToString
-public class SysUserRole extends JpaBaseEntity {
+public class SysUserRole {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(unique = true, nullable = false)
@@ -38,6 +38,6 @@ public class SysUserRole extends JpaBaseEntity {
     /**
      * 角色ID
      */
-    @Column
+    @Column(nullable = false)
     private Long roleId;
 }

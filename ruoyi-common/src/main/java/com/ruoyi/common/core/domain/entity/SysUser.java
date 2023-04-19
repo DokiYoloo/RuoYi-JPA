@@ -1,21 +1,17 @@
 package com.ruoyi.common.core.domain.entity;
 
-import com.ruoyi.common.core.domain.BaseEntity;
+import com.ruoyi.common.core.domain.JpaBaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.util.Date;
-import java.util.List;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -29,9 +25,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Getter
 @Setter
 @ToString
-public class SysUser extends BaseEntity {
-    private static final long serialVersionUID = 1L;
-
+public class SysUser extends JpaBaseEntity {
     /**
      * 用户ID
      */
@@ -49,13 +43,13 @@ public class SysUser extends BaseEntity {
     /**
      * 用户账号
      */
-    @Column(length = 80)
+    @Column(length = 30, nullable = false)
     private String userName;
 
     /**
      * 用户昵称
      */
-    @Column(length = 50)
+    @Column(length = 30, nullable = false)
     private String nickName;
 
     /**
@@ -73,77 +67,47 @@ public class SysUser extends BaseEntity {
     /**
      * 用户性别
      */
-    @Column(length = 20)
-    private String sex;
+    @ColumnDefault("'0'")
+    @Column(columnDefinition = "char(1)")
+    private String sex = "0";
 
     /**
      * 用户头像
      */
-    @Column(length = 500)
+    @Column(length = 150)
     private String avatar;
 
     /**
      * 密码
      */
-    @Column(length = 150)
+    @Column(length = 100)
     private String password;
 
     /**
      * 帐号状态（0正常 1停用）
      */
-    @Column(length = 2)
-    private String status;
+    @ColumnDefault("'0'")
+    @Column(columnDefinition = "char(1)")
+    private String status = "0";
 
     /**
      * 删除标志（0代表存在 2代表删除）
      */
-    @Column(length = 2)
+    @ColumnDefault("'0'")
+    @Column(columnDefinition = "char(1)")
     private String delFlag;
 
     /**
      * 最后登录IP
      */
-    @Column(length = 20)
+    @Column(length = 128)
     private String loginIp;
 
     /**
      * 最后登录时间
      */
-    @Column
+    @Column(columnDefinition = "DATETIME")
     private Date loginDate;
-
-    /**
-     * 部门对象
-     */
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "dept_id")
-    private SysDept dept;
-
-    /**
-     * 角色对象
-     */
-    @Deprecated
-    @Transient
-    private List<SysRole> roles;
-
-    /**
-     * 角色组
-     */
-    @Deprecated
-    @Transient
-    private Long[] roleIds;
-
-    /**
-     * 岗位组
-     */
-    @Deprecated
-    @Transient
-    private Long[] postIds;
-
-    /**
-     * 角色ID
-     */
-    private Long roleId;
 
     public SysUser() {
 

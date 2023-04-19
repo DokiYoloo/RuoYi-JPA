@@ -4,6 +4,7 @@ import com.ruoyi.common.core.domain.JpaBaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -49,13 +50,14 @@ public class SysPost extends JpaBaseEntity {
     /**
      * 岗位排序
      */
-    @Column
+    @Column(columnDefinition = "int(4)")
     private Integer postSort;
 
     /**
      * 状态（0正常 1停用）
      */
-    @Column(length = 2)
+    @ColumnDefault("0")
+    @Column(columnDefinition = "char(1)")
     private String status;
 
 }

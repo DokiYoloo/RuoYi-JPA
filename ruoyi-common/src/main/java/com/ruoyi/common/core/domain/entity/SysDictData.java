@@ -1,10 +1,10 @@
 package com.ruoyi.common.core.domain.entity;
 
-import com.ruoyi.common.core.domain.BaseEntity;
 import com.ruoyi.common.core.domain.JpaBaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,7 +25,6 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Setter
 @ToString
 public class SysDictData extends JpaBaseEntity {
-    private static final long serialVersionUID = 1L;
 
     /**
      * 字典编码
@@ -38,24 +37,28 @@ public class SysDictData extends JpaBaseEntity {
     /**
      * 字典排序
      */
-    @Column
+    @ColumnDefault("0")
+    @Column(columnDefinition = "int(4)")
     private Long dictSort;
 
     /**
      * 字典标签
      */
+    @ColumnDefault("''")
     @Column(length = 100)
     private String dictLabel;
 
     /**
      * 字典键值
      */
+    @ColumnDefault("''")
     @Column(length = 100)
     private String dictValue;
 
     /**
      * 字典类型
      */
+    @ColumnDefault("''")
     @Column(length = 100)
     private String dictType;
 
@@ -74,12 +77,14 @@ public class SysDictData extends JpaBaseEntity {
     /**
      * 是否默认（Y是 N否）
      */
+    @ColumnDefault("'N'")
     @Column(columnDefinition = "char(1)")
     private String isDefault;
 
     /**
      * 状态（0正常 1停用）
      */
+    @ColumnDefault("'0'")
     @Column(columnDefinition = "char(1)")
     private String status;
 

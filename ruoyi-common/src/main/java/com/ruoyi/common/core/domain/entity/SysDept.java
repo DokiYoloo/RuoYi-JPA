@@ -4,6 +4,7 @@ import com.ruoyi.common.core.domain.JpaBaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -36,13 +37,14 @@ public class SysDept extends JpaBaseEntity {
     /**
      * 父部门ID
      */
+    @ColumnDefault("0")
     @Column
     private Long parentId;
 
     /**
      * 祖级列表
      */
-    @Column(length = 50)
+    @Column(length = 80)
     private String ancestors;
 
     /**
@@ -54,37 +56,38 @@ public class SysDept extends JpaBaseEntity {
     /**
      * 显示顺序
      */
-    @Column
+    @ColumnDefault("0")
+    @Column(columnDefinition = "int(4)")
     private Integer orderNum;
 
     /**
      * 负责人
      */
-    @Column(length = 30)
+    @Column(length = 20)
     private String leader;
 
     /**
      * 联系电话
      */
-    @Column(length = 20)
+    @Column(length = 11)
     private String phone;
 
     /**
      * 邮箱
      */
-    @Column(length = 30)
+    @Column(length = 50)
     private String email;
 
     /**
      * 部门状态:0正常,1停用
      */
-    @Column(length = 2)
+    @Column(columnDefinition = "char(1)")
     private String status;
 
     /**
      * 删除标志（0代表存在 2代表删除）
      */
-    @Column(length = 2)
+    @Column(columnDefinition = "char(1)")
     private String delFlag;
 
 }

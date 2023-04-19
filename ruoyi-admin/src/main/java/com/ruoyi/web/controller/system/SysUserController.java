@@ -8,6 +8,7 @@ import com.ruoyi.common.core.domain.ResponseEntity;
 import com.ruoyi.common.core.domain.TreeSelect;
 import com.ruoyi.common.core.domain.convertor.SysUserConvertor;
 import com.ruoyi.common.core.domain.entity.dto.SysDeptDTO;
+import com.ruoyi.common.core.domain.entity.dto.SysRoleDTO;
 import com.ruoyi.common.core.domain.entity.dto.SysUserDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ArrayUtils;
@@ -100,10 +101,10 @@ public class SysUserController extends BaseController {
         ajax.put("roles", SysUser.isAdmin(userId) ? roles : roles.stream().filter(r -> !r.isAdmin()).collect(Collectors.toList()));
         ajax.put("posts", postService.selectPostAll());
         if (StringUtils.isNotNull(userId)) {
-            SysUser sysUser = userService.selectUserById(userId);
+            SysUserDTO sysUser = SysUserConvertor.toDTO(userService.selectUserById(userId));
             ajax.put(AjaxResult.DATA_TAG, sysUser);
             ajax.put("postIds", postService.selectPostListByUserId(userId));
-            ajax.put("roleIds", sysUser.getRoles().stream().map(SysRole::getRoleId).collect(Collectors.toList()));
+            ajax.put("roleIds", sysUser.getRoles().stream().map(SysRoleDTO::getRoleId).collect(Collectors.toList()));
         }
         return ajax;
     }

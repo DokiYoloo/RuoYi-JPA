@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -45,12 +46,14 @@ public class JpaBaseEntity {
     /**
      * 创建者
      */
+    @ColumnDefault("''")
     @Column(name = "create_by", length = 64)
     private String createBy;
 
     /**
      * 更新者
      */
+    @ColumnDefault("''")
     @Column(name = "update_by", length = 64)
     private String updateBy;
 

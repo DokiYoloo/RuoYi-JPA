@@ -1,10 +1,10 @@
 package com.ruoyi.system.domain;
 
-import com.ruoyi.common.core.domain.BaseEntity;
 import com.ruoyi.common.core.domain.JpaBaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,7 +25,6 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Setter
 @ToString
 public class SysConfig extends JpaBaseEntity {
-    private static final long serialVersionUID = 1L;
 
     /**
      * 参数主键
@@ -38,25 +37,29 @@ public class SysConfig extends JpaBaseEntity {
     /**
      * 参数名称
      */
-    @Column(length = 150)
+    @ColumnDefault("''")
+    @Column(length = 100)
     private String configName;
 
     /**
      * 参数键名
      */
-    @Column(length = 200)
+    @ColumnDefault("''")
+    @Column(length = 100)
     private String configKey;
 
     /**
      * 参数键值
      */
-    @Column(length = 400)
+    @ColumnDefault("''")
+    @Column(length = 500)
     private String configValue;
 
     /**
      * 系统内置（Y是 N否）
      */
-    @Column(length = 20)
+    @ColumnDefault("'N'")
+    @Column(columnDefinition = "char(1)")
     private String configType;
 
 }

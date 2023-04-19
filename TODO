@@ -4,3 +4,13 @@
 然后代码生成
 
 数据范围
+
+SysDept:
+
+SysUser:
+ private SysDeptDTO dept;
+ private List<SysRoleDTO> roles;
+
+ private Long[] roleIds;
+ private Long[] postIds;
+ private Long roleId;
