@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fenixs namespace="com.ruoyi.system.repository.SysMenuRepository">
+
+    <fenix id="findMenuList">
+        from SysMenu m where 1 = 1
+        <andLike match="menu.menuName != empty" field="m.menuName" value="menu.menuName"/>
+        <andEqual match="menu.visible != empty" field="m.visible" value="menu.visible"/>
+        <andEqual match="menu.status != empty" field="m.status" value="menu.status"/>
+        order by m.parentId, m.orderNum
+    </fenix>
+
+    <fenix id="findAllMenuByUserId">
+        from SysMenu m
+        left join SysRoleMenu rm on m.menuId = rm.menuId
+        left join SysUserRole ur on ur.roleId = rm.roleId
+        left join SysRole r on r.roleId = ur.roleId
+        where ur.userId = ?1
+        <andLike match="menu.menuName != empty" field="m.menuName" value="menu.menuName"/>
+        <andEqual match="menu.visible != empty" field="m.visible" value="menu.visible"/>
+        <andEqual match="menu.status != empty" field="m.status" value="menu.status"/>
+        order by m.parentId, m.orderNum
+    </fenix>
+
+    <fenix id="findAllMenuByRoleId">
+        select m.menu_id
+        from SysMenu m
+        left join SysRoleMenu rm on m.menuId = rm.menuId
+        where rm.roleId = ?1
+        @if{menuCheckStrictly}
+        and m.menuId not in (select m.parentId from SysMenu m inner join SysRoleMenu rm on m.menuId =
+        rm.menuId and rm.roleId = ?1)
+        @end{}
+        order by m.parentId, m.orderNum
+    </fenix>
+
+</fenixs>

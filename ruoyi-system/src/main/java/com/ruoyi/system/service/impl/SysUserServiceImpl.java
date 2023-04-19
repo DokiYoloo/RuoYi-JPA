@@ -326,7 +326,6 @@ public class SysUserServiceImpl implements ISysUserService {
      * 重置用户密码
      *
      * @param user 用户信息
-     * @return 结果
      */
     @Override
     public void resetPwd(SysUserDTO user) {
@@ -341,7 +340,6 @@ public class SysUserServiceImpl implements ISysUserService {
      *
      * @param userName 用户名
      * @param password 密码
-     * @return 结果
      */
     @Override
     public void resetUserPwd(String userName, String password) {
@@ -401,7 +399,6 @@ public class SysUserServiceImpl implements ISysUserService {
      * 通过用户ID删除用户
      *
      * @param userId 用户ID
-     * @return 结果
      */
     @Override
     @Transactional
@@ -461,7 +458,7 @@ public class SysUserServiceImpl implements ISysUserService {
                     SysUser sysUser = SysUserConvertor.toPO(user);
                     userRepo.save(sysUser);
                     successNum++;
-                    successMsg.append("<br/>" + successNum + "、账号 " + user.getUserName() + " 导入成功");
+                    successMsg.append("<br/>").append(successNum).append("、账号 ").append(user.getUserName()).append(" 导入成功");
                 } else if (isUpdateSupport) {
                     BeanValidators.validateWithException(validator, user);
                     checkUserAllowed(SysUserConvertor.toDTO(u));

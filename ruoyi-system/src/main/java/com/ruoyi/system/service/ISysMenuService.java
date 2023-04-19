@@ -129,9 +129,8 @@ public interface ISysMenuService {
      * 删除菜单管理信息
      *
      * @param menuId 菜单ID
-     * @return 结果
      */
-    int deleteMenuById(Long menuId);
+    void deleteMenuById(Long menuId);
 
     /**
      * 校验菜单名称是否唯一

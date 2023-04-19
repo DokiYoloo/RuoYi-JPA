@@ -12,8 +12,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import java.util.ArrayList;
-import java.util.List;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -28,7 +26,6 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Setter
 @ToString
 public class SysMenu extends JpaBaseEntity {
-    private static final long serialVersionUID = 1L;
 
     /**
      * 菜单ID
