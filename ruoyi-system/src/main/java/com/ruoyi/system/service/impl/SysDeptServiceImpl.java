@@ -48,7 +48,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
     @DataScope(deptAlias = "d")
     public Page<SysDept> selectDeptPaged(SysDeptDTO dept) {
         Pageable pageable = dept.buildPageable();
-        return deptRepo.selectDeptList(dept, pageable);
+        return deptRepo.findDeptPaged(dept, pageable);
     }
 
     /**

@@ -1,11 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <fenixs namespace="com.ruoyi.system.repository.SysDeptRepository">
 
+    <fenix id="findDeptPaged">
+        from SysDept d where d.delFlag = '0'
+        <andLike match="dept.deptName != empty" field="d.deptName" value="dept.deptName"/>
+        <andEqual match="dept.deptId != empty" field="d.deptId" value="dept.deptId"/>
+        <andEqual match="dept.parentId != empty" field="d.parentId" value="dept.parentId"/>
+        <andEqual match="dept.status != empty" field="d.status" value="dept.status"/>
+        <!-- TODO 数据范围过滤 -->
+        order by d.parentId, d.orderNum
+    </fenix>
+
 <!--    TODO if -->
     <fenix id="selectDeptListByRoleId">
         from SysDept d left join SysRoleDept rd on d.deptId = rd.deptId
         where rd.roleId = #{roleId}
 
+        @if{deptCheckStrictly}
+            and d.deptId not in (select d.parentId from SysDept d inner join SysRoleDept rd on d.deptId =
+            rd.deptId and rd.roleId = #{roleId})
+        @end{}
 
         order by d.parentId, d.orderNum
     </fenix>

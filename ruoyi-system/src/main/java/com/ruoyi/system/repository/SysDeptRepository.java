@@ -28,7 +28,8 @@ public interface SysDeptRepository extends FenixJpaRepository<SysDept, Long> {
      * @param dept 部门信息
      * @return 部门信息集合
      */
-    Page<SysDept> selectDeptList(SysDeptDTO dept, Pageable pageable);
+    @QueryFenix
+    Page<SysDept> findDeptPaged(SysDeptDTO dept, Pageable pageable);
 
     /**
      * 根据角色ID查询部门树信息
