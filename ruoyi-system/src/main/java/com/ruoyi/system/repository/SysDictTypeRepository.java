@@ -1,22 +1,20 @@
 package com.ruoyi.system.repository;
 
+import com.blinkfox.fenix.jpa.FenixJpaRepository;
 import com.ruoyi.common.core.domain.entity.SysDictType;
 import com.ruoyi.common.core.domain.entity.dto.SysDictTypeDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 /**
  * 字典表 数据层
  *
- * @author ruoyi
+ * @author DokiYolo
  */
 @Repository
-public interface SysDictTypeRepository extends JpaRepository<SysDictType, Long> {
+public interface SysDictTypeRepository extends FenixJpaRepository<SysDictType, Long> {
     /**
      * 根据条件分页查询字典类型
      *

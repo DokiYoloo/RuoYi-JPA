@@ -54,12 +54,11 @@ public interface SysUserRoleRepository extends FenixJpaRepository<SysUserRole, L
 
     /**
      * 批量取消授权用户角色
-     *
-     * @param roleId  角色ID
+     *  @param roleId  角色ID
      * @param userIds 需要删除的用户数据ID
      */
     @Modifying
     @Transactional
     @Query(nativeQuery = true, value = "delete from sys_user_role where user_id in ?2 and role_id = ?1")
-    int deleteUserRoleInfos(@Param("roleId") Long roleId, @Param("userIds") Long[] userIds);
+    void deleteUserRoleInfos(@Param("roleId") Long roleId, @Param("userIds") Long[] userIds);
 }

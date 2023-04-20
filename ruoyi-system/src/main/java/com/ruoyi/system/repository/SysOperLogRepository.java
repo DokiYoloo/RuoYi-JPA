@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
  * 操作日志记录Repository
  *
  * @author DokiYolo
- * @since 2023-04-13
  */
 @Repository
 public interface SysOperLogRepository extends JpaRepository<SysOperLog, Long> {

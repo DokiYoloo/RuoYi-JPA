@@ -32,18 +32,13 @@ public abstract class RepeatSubmitInterceptor implements HandlerInterceptor {
                     return false;
                 }
             }
-            return true;
-        } else {
-            return true;
         }
+        return true;
     }
 
     /**
      * 验证是否重复提交由子类实现具体的防重复提交的规则
      *
-     * @param request
-     * @return
-     * @throws Exception
      */
     public abstract boolean isRepeatSubmit(HttpServletRequest request, RepeatSubmit annotation);
 }

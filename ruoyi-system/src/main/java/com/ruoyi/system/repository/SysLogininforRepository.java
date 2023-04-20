@@ -1,11 +1,11 @@
 package com.ruoyi.system.repository;
 
+import com.blinkfox.fenix.jpa.FenixJpaRepository;
 import com.blinkfox.fenix.jpa.QueryFenix;
 import com.ruoyi.system.domain.SysLogininfor;
 import com.ruoyi.system.domain.dto.SysLogininforDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
  * @author DokiYolo
  */
 @Repository
-public interface SysLogininforRepository extends JpaRepository<SysLogininfor, Long> {
+public interface SysLogininforRepository extends FenixJpaRepository<SysLogininfor, Long> {
     /**
      * 查询系统登录日志
      *

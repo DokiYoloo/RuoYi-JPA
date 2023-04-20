@@ -8,6 +8,8 @@ import java.util.HashMap;
 /**
  * 操作消息提醒
  *
+ * 这个类暂时保留了 部分地方是直接put的值 避免影响现有接口返回的结构
+ *
  * @author ruoyi
  */
 public class AjaxResult extends HashMap<String, Object> {

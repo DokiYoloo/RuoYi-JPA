@@ -29,7 +29,7 @@ public class AsyncManager {
     private AsyncManager() {
     }
 
-    private static AsyncManager me = new AsyncManager();
+    private static final AsyncManager me = new AsyncManager();
 
     public static AsyncManager me() {
         return me;

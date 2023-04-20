@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * 用户表 数据层
  *
- * @author ruoyi
+ * @author DokiYolo
  */
 @Repository
 public interface SysUserRepository extends FenixJpaRepository<SysUser, Long> {

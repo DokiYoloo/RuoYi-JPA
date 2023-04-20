@@ -1,5 +1,6 @@
 package com.ruoyi.system.repository;
 
+import com.blinkfox.fenix.jpa.FenixJpaRepository;
 import com.ruoyi.system.domain.SysPost;
 import com.ruoyi.system.domain.dto.SysPostDTO;
 import org.springframework.data.domain.Page;
@@ -16,7 +17,7 @@ import java.util.List;
  * @author DokiYolo
  */
 @Repository
-public interface SysPostRepository extends JpaRepository<SysPost, Long> {
+public interface SysPostRepository extends FenixJpaRepository<SysPost, Long> {
     Page<SysPost> findPaged(SysPostDTO post, Pageable pageable);
 
     @Query("from SysPost p left join SysUserPost up on up.postId = p.postId left join SysUser u on u.userId = up.userId where u.userId = ?1")

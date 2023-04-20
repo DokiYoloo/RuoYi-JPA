@@ -14,7 +14,6 @@ import java.util.List;
  * 系统角色Repository
  *
  * @author DokiYolo
- * @since 2023-04-14
  */
 @Repository
 public interface SysRoleRepository extends FenixJpaRepository<SysRole, Long> {

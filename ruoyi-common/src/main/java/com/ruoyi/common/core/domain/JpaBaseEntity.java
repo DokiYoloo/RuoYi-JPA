@@ -1,6 +1,5 @@
 package com.ruoyi.common.core.domain;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,11 +13,7 @@ import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
-import javax.persistence.Transient;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * The base class for all entity.
@@ -62,19 +57,6 @@ public class JpaBaseEntity {
      */
     @Column(name = "remark", length = 500)
     private String remark;
-
-    /**
-     * 兼容原BaseEntity,这不是一个数据库字段
-     * TODO 看上去没卵用 后面删掉
-     */
-    @Transient
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private Map<String, Object> params;
-
-    public Map<String, Object> getParams() {
-        return Optional.ofNullable(params)
-                .orElseGet(HashMap::new);
-    }
 
     @PreUpdate
     public void preUpdate() {

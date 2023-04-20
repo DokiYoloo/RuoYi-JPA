@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * 部门管理 数据层
  *
- * @author ruoyi
+ * @author DokiYolo
  */
 @Repository
 public interface SysDeptRepository extends FenixJpaRepository<SysDept, Long> {

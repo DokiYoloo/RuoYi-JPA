@@ -7,8 +7,10 @@ import java.io.Serializable;
 /**
  * 响应信息主体
  *
+ * @deprecated use {@link ResponseEntity}
  * @author ruoyi
  */
+@Deprecated
 public class R<T> implements Serializable {
     private static final long serialVersionUID = 1L;
 

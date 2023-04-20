@@ -12,7 +12,7 @@ import org.springframework.data.domain.Sort;
 
 /**
  * 需要分页的都可以继承这个类，这个类是
- * 原RuoYi BasePage类的一个适配类。
+ * 原RuoYi PageDomain类的一个改造类。
  * 参数与其一致，为了不影响前端。
  *
  * @author DokiYolo
@@ -92,12 +92,6 @@ public class BasePageQuery extends BaseEntity {
 
     public Pageable buildNoSortPageable() {
         return PageRequest.of(Math.max(this.pageNum - 1, 0), this.pageSize);
-    }
-
-    public <T extends BasePageQuery> T queryMax() {
-        this.pageNum = 0;
-        this.pageSize = 999999;
-        return (T) this;
     }
 
 }
