@@ -25,7 +25,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.domain.SysPost;
-import com.ruoyi.system.service.ISysPostService;
+import com.ruoyi.system.service.SysPostService;
 
 /**
  * 岗位信息操作处理
@@ -36,7 +36,7 @@ import com.ruoyi.system.service.ISysPostService;
 @RequiredArgsConstructor
 @RequestMapping("/system/post")
 public class SysPostController extends BaseController {
-    private final ISysPostService postService;
+    private final SysPostService postService;
 
     /**
      * 获取岗位列表

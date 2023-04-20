@@ -24,7 +24,7 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.entity.SysDept;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.system.service.ISysDeptService;
+import com.ruoyi.system.service.SysDeptService;
 
 /**
  * 部门信息
@@ -35,7 +35,7 @@ import com.ruoyi.system.service.ISysDeptService;
 @RequiredArgsConstructor
 @RequestMapping("/system/dept")
 public class SysDeptController extends BaseController {
-    private final ISysDeptService deptService;
+    private final SysDeptService deptService;
 
     /**
      * 获取部门列表

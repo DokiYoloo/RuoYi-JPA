@@ -19,8 +19,8 @@ import com.ruoyi.system.repository.SysRoleRepository;
 import com.ruoyi.system.repository.SysUserPostRepository;
 import com.ruoyi.system.repository.SysUserRepository;
 import com.ruoyi.system.repository.SysUserRoleRepository;
-import com.ruoyi.system.service.ISysConfigService;
-import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.system.service.SysConfigService;
+import com.ruoyi.system.service.SysUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -42,13 +42,13 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class SysUserServiceImpl implements ISysUserService {
+public class SysUserServiceImpl implements SysUserService {
     private final SysUserRepository userRepo;
     private final SysRoleRepository roleRepo;
     private final SysPostRepository sysPostRepo;
     private final SysUserRoleRepository userRoleRepo;
     private final SysUserPostRepository userPostRepo;
-    private final ISysConfigService configService;
+    private final SysConfigService configService;
     protected final Validator validator;
 
     /**

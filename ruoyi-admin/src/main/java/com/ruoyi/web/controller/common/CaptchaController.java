@@ -17,7 +17,7 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.sign.Base64;
 import com.ruoyi.common.utils.uuid.IdUtils;
-import com.ruoyi.system.service.ISysConfigService;
+import com.ruoyi.system.service.SysConfigService;
 
 /**
  * 验证码操作处理
@@ -30,7 +30,7 @@ public class CaptchaController {
     private final Producer captchaProducer;
     private final Producer captchaProducerMath;
     private final RedisCache redisCache;
-    private final ISysConfigService configService;
+    private final SysConfigService configService;
 
     /**
      * 生成验证码

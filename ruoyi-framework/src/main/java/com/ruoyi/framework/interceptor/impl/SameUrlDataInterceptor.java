@@ -8,7 +8,7 @@ import com.ruoyi.common.filter.RepeatedlyRequestWrapper;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.http.HttpHelper;
 import com.ruoyi.framework.interceptor.RepeatSubmitInterceptor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
  * @author ruoyi
  */
 @Component
+@RequiredArgsConstructor
 public class SameUrlDataInterceptor extends RepeatSubmitInterceptor {
     public final String REPEAT_PARAMS = "repeatParams";
 
@@ -33,8 +34,7 @@ public class SameUrlDataInterceptor extends RepeatSubmitInterceptor {
     @Value("${token.header}")
     private String header;
 
-    @Autowired
-    private RedisCache redisCache;
+    private final RedisCache redisCache;
 
     @SuppressWarnings("unchecked")
     @Override

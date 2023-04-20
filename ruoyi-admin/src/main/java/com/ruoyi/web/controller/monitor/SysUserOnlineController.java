@@ -17,14 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysUserOnline;
-import com.ruoyi.system.service.ISysUserOnlineService;
+import com.ruoyi.system.service.SysUserOnlineService;
 
 /**
  * 在线用户监控
@@ -35,7 +34,7 @@ import com.ruoyi.system.service.ISysUserOnlineService;
 @RequiredArgsConstructor
 @RequestMapping("/monitor/online")
 public class SysUserOnlineController extends BaseController {
-    private final ISysUserOnlineService userOnlineService;
+    private final SysUserOnlineService userOnlineService;
     private final RedisCache redisCache;
 
     @PreAuthorize("@ss.hasPermi('monitor:online:list')")

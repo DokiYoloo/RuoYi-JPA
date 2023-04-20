@@ -33,10 +33,10 @@ import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.system.service.ISysDeptService;
-import com.ruoyi.system.service.ISysPostService;
-import com.ruoyi.system.service.ISysRoleService;
-import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.system.service.SysDeptService;
+import com.ruoyi.system.service.SysPostService;
+import com.ruoyi.system.service.SysRoleService;
+import com.ruoyi.system.service.SysUserService;
 
 /**
  * 用户信息
@@ -47,10 +47,10 @@ import com.ruoyi.system.service.ISysUserService;
 @RequiredArgsConstructor
 @RequestMapping("/system/user")
 public class SysUserController extends BaseController {
-    private final ISysUserService userService;
-    private final ISysRoleService roleService;
-    private final ISysDeptService deptService;
-    private final ISysPostService postService;
+    private final SysUserService userService;
+    private final SysRoleService roleService;
+    private final SysDeptService deptService;
+    private final SysPostService postService;
 
     /**
      * 获取用户列表

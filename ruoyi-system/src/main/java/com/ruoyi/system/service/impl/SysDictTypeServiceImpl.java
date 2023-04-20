@@ -12,7 +12,7 @@ import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.repository.SysDictDataRepository;
 import com.ruoyi.system.repository.SysDictTypeRepository;
-import com.ruoyi.system.service.ISysDictTypeService;
+import com.ruoyi.system.service.SysDictTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
-public class SysDictTypeServiceImpl implements ISysDictTypeService {
+public class SysDictTypeServiceImpl implements SysDictTypeService {
     private final SysDictTypeRepository dictTypeRepo;
     private final SysDictDataRepository dictDataRepo;
 

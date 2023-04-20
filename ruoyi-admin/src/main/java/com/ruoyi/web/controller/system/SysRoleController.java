@@ -18,11 +18,10 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.service.SysPermissionService;
 import com.ruoyi.framework.web.service.TokenService;
-import com.ruoyi.system.domain.SysUserRole;
 import com.ruoyi.system.domain.dto.SysUserRoleDTO;
-import com.ruoyi.system.service.ISysDeptService;
-import com.ruoyi.system.service.ISysRoleService;
-import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.system.service.SysDeptService;
+import com.ruoyi.system.service.SysRoleService;
+import com.ruoyi.system.service.SysUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -49,11 +48,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RequestMapping("/system/role")
 public class SysRoleController extends BaseController {
-    private final ISysRoleService roleService;
+    private final SysRoleService roleService;
     private final TokenService tokenService;
     private final SysPermissionService permissionService;
-    private final ISysUserService userService;
-    private final ISysDeptService deptService;
+    private final SysUserService userService;
+    private final SysDeptService deptService;
 
     @PreAuthorize("@ss.hasPermi('system:role:list')")
     @GetMapping("/list")

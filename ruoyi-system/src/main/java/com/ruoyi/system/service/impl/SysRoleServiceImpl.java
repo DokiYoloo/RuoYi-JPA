@@ -18,7 +18,7 @@ import com.ruoyi.system.repository.SysRoleDeptRepository;
 import com.ruoyi.system.repository.SysRoleMenuRepository;
 import com.ruoyi.system.repository.SysRoleRepository;
 import com.ruoyi.system.repository.SysUserRoleRepository;
-import com.ruoyi.system.service.ISysRoleService;
+import com.ruoyi.system.service.SysRoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,7 +40,7 @@ import static com.ruoyi.common.utils.SecurityUtils.getUsername;
  */
 @Service
 @RequiredArgsConstructor
-public class SysRoleServiceImpl implements ISysRoleService {
+public class SysRoleServiceImpl implements SysRoleService {
     private final SysRoleRepository sysRoleRepo;
     private final SysRoleMenuRepository roleMenuRepo;
     private final SysUserRoleRepository userRoleRepo;

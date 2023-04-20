@@ -7,6 +7,7 @@ import com.ruoyi.quartz.mapper.SysJobMapper;
 import com.ruoyi.quartz.service.ISysJobService;
 import com.ruoyi.quartz.util.CronUtils;
 import com.ruoyi.quartz.util.ScheduleUtils;
+import lombok.RequiredArgsConstructor;
 import org.quartz.JobDataMap;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
@@ -24,12 +25,10 @@ import java.util.List;
  * @author ruoyi
  */
 @Service
+@RequiredArgsConstructor
 public class SysJobServiceImpl implements ISysJobService {
-    @Autowired
-    private Scheduler scheduler;
-
-    @Autowired
-    private SysJobMapper jobMapper;
+    private final Scheduler scheduler;
+    private final SysJobMapper jobMapper;
 
     /**
      * 项目启动时，初始化定时器 主要是防止手动修改数据库导致未同步到定时任务处理（注：不能手动修改数据库ID和任务组名，否则会导致脏数据）

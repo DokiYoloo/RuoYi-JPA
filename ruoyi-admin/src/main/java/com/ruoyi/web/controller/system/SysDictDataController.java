@@ -25,8 +25,8 @@ import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.system.service.ISysDictDataService;
-import com.ruoyi.system.service.ISysDictTypeService;
+import com.ruoyi.system.service.SysDictDataService;
+import com.ruoyi.system.service.SysDictTypeService;
 
 /**
  * 数据字典信息
@@ -37,8 +37,8 @@ import com.ruoyi.system.service.ISysDictTypeService;
 @RequiredArgsConstructor
 @RequestMapping("/system/dict/data")
 public class SysDictDataController extends BaseController {
-    private final ISysDictDataService dictDataService;
-    private final ISysDictTypeService dictTypeService;
+    private final SysDictDataService dictDataService;
+    private final SysDictTypeService dictTypeService;
 
     @PreAuthorize("@ss.hasPermi('system:dict:list')")
     @GetMapping("/list")

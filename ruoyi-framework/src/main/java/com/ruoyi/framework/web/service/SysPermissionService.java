@@ -2,8 +2,8 @@ package com.ruoyi.framework.web.service;
 
 import com.ruoyi.common.core.domain.entity.dto.SysRoleDTO;
 import com.ruoyi.common.core.domain.entity.dto.SysUserDTO;
-import com.ruoyi.system.service.ISysMenuService;
-import com.ruoyi.system.service.ISysRoleService;
+import com.ruoyi.system.service.SysMenuService;
+import com.ruoyi.system.service.SysRoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -19,8 +19,8 @@ import java.util.Set;
 @Component
 @RequiredArgsConstructor
 public class SysPermissionService {
-    private final ISysRoleService roleService;
-    private final ISysMenuService menuService;
+    private final SysRoleService roleService;
+    private final SysMenuService menuService;
 
     /**
      * 获取角色数据权限

@@ -15,7 +15,7 @@ import com.ruoyi.system.domain.vo.RouterVo;
 import com.ruoyi.system.mapper.SysRoleMenuMapper;
 import com.ruoyi.system.repository.SysMenuRepository;
 import com.ruoyi.system.repository.SysRoleRepository;
-import com.ruoyi.system.service.ISysMenuService;
+import com.ruoyi.system.service.SysMenuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @RequiredArgsConstructor
-public class SysMenuServiceImpl implements ISysMenuService {
+public class SysMenuServiceImpl implements SysMenuService {
     public static final String PREMISSION_STRING = "perms[\"{0}\"]";
 
     private final SysMenuRepository menuMapper;

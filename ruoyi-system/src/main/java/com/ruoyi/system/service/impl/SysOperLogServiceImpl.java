@@ -4,7 +4,7 @@ import com.ruoyi.system.domain.SysOperLog;
 import com.ruoyi.system.domain.convertor.SysOperLogConvertor;
 import com.ruoyi.system.domain.dto.SysOperLogDTO;
 import com.ruoyi.system.repository.SysOperLogRepository;
-import com.ruoyi.system.service.ISysOperLogService;
+import com.ruoyi.system.service.SysOperLogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +21,7 @@ import static com.ruoyi.common.utils.SecurityUtils.getUsername;
  */
 @Service
 @RequiredArgsConstructor
-public class SysOperLogServiceImpl implements ISysOperLogService {
+public class SysOperLogServiceImpl implements SysOperLogService {
     private final SysOperLogRepository operLogRepo;
 
     /**

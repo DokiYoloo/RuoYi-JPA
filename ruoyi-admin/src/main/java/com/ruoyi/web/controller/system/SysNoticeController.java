@@ -20,7 +20,7 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.system.domain.SysNotice;
-import com.ruoyi.system.service.ISysNoticeService;
+import com.ruoyi.system.service.SysNoticeService;
 
 /**
  * 公告 信息操作处理
@@ -31,7 +31,7 @@ import com.ruoyi.system.service.ISysNoticeService;
 @RequiredArgsConstructor
 @RequestMapping("/system/notice")
 public class SysNoticeController extends BaseController {
-    private final ISysNoticeService noticeService;
+    private final SysNoticeService noticeService;
 
     /**
      * 获取通知公告列表

@@ -3,7 +3,6 @@ package com.ruoyi.framework.web.service;
 import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.UserConstants;
-import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.entity.dto.SysUserDTO;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.redis.RedisCache;
@@ -20,17 +19,14 @@ import com.ruoyi.common.utils.ip.IpUtils;
 import com.ruoyi.framework.manager.AsyncManager;
 import com.ruoyi.framework.manager.factory.AsyncFactory;
 import com.ruoyi.framework.security.context.AuthenticationContextHolder;
-import com.ruoyi.system.service.ISysConfigService;
-import com.ruoyi.system.service.ISysUserService;
+import com.ruoyi.system.service.SysConfigService;
+import com.ruoyi.system.service.SysUserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * 登录校验方法
@@ -43,8 +39,8 @@ public class SysLoginService {
     private final TokenService tokenService;
     private final AuthenticationManager authenticationManager;
     private final RedisCache redisCache;
-    private final ISysUserService userService;
-    private final ISysConfigService configService;
+    private final SysUserService userService;
+    private final SysConfigService configService;
 
     /**
      * 登录验证

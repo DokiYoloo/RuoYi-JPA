@@ -15,8 +15,8 @@ import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.common.core.domain.convertor.SysDeptConvertor;
 import com.ruoyi.system.repository.SysDeptRepository;
 import com.ruoyi.system.repository.SysRoleRepository;
-import com.ruoyi.system.service.ISysDeptService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ruoyi.system.service.SysDeptService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,12 +31,10 @@ import java.util.stream.Collectors;
  * @author ruoyi
  */
 @Service
-public class SysDeptServiceImpl implements ISysDeptService {
-    @Autowired
-    private SysDeptRepository deptRepo;
-
-    @Autowired
-    private SysRoleRepository roleRepo;
+@RequiredArgsConstructor
+public class SysDeptServiceImpl implements SysDeptService {
+    private final SysDeptRepository deptRepo;
+    private final SysRoleRepository roleRepo;
 
     /**
      * 查询部门管理数据

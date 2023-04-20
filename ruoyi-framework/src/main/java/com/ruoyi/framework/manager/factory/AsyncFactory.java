@@ -9,11 +9,10 @@ import com.ruoyi.common.utils.ip.IpUtils;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.domain.dto.SysLogininforDTO;
 import com.ruoyi.system.domain.dto.SysOperLogDTO;
-import com.ruoyi.system.service.ISysLogininforService;
-import com.ruoyi.system.service.ISysOperLogService;
+import com.ruoyi.system.service.SysLogininforService;
+import com.ruoyi.system.service.SysOperLogService;
 import eu.bitwalker.useragentutils.UserAgent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.TimerTask;
 
@@ -22,8 +21,8 @@ import java.util.TimerTask;
  *
  * @author ruoyi
  */
+@Slf4j
 public class AsyncFactory {
-    private static final Logger sys_user_logger = LoggerFactory.getLogger("sys-user");
 
     /**
      * 记录登录信息
@@ -49,7 +48,7 @@ public class AsyncFactory {
                 s.append(LogUtils.getBlock(status));
                 s.append(LogUtils.getBlock(message));
                 // 打印信息到日志
-                sys_user_logger.info(s.toString(), args);
+                log.info(s.toString(), args);
                 // 获取客户端操作系统
                 String os = userAgent.getOperatingSystem().getName();
                 // 获取客户端浏览器
@@ -69,7 +68,7 @@ public class AsyncFactory {
                     logininfor.setStatus(Constants.FAIL);
                 }
                 // 插入数据
-                SpringUtils.getBean(ISysLogininforService.class).insertLogininfor(logininfor);
+                SpringUtils.getBean(SysLogininforService.class).insertLogininfor(logininfor);
             }
         };
     }
@@ -86,7 +85,7 @@ public class AsyncFactory {
             public void run() {
                 // 远程查询操作地点
                 operLog.setOperLocation(AddressUtils.getRealAddressByIP(operLog.getOperIp()));
-                SpringUtils.getBean(ISysOperLogService.class).insertOperlog(operLog);
+                SpringUtils.getBean(SysOperLogService.class).insertOperlog(operLog);
             }
         };
     }

@@ -4,7 +4,7 @@ import com.ruoyi.system.domain.SysLogininfor;
 import com.ruoyi.system.domain.convertor.SysLogininforConvertor;
 import com.ruoyi.system.domain.dto.SysLogininforDTO;
 import com.ruoyi.system.repository.SysLogininforRepository;
-import com.ruoyi.system.service.ISysLogininforService;
+import com.ruoyi.system.service.SysLogininforService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +19,7 @@ import java.util.Arrays;
  */
 @Service
 @RequiredArgsConstructor
-public class SysLogininforServiceImpl implements ISysLogininforService {
+public class SysLogininforServiceImpl implements SysLogininforService {
     private final SysLogininforRepository logininforRepo;
 
     /**

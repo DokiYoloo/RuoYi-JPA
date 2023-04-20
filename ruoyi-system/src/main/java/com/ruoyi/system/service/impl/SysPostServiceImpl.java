@@ -9,7 +9,7 @@ import com.ruoyi.system.domain.convertor.SysPostConvertor;
 import com.ruoyi.system.domain.dto.SysPostDTO;
 import com.ruoyi.system.repository.SysPostRepository;
 import com.ruoyi.system.repository.SysUserPostRepository;
-import com.ruoyi.system.service.ISysPostService;
+import com.ruoyi.system.service.SysPostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +25,7 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-public class SysPostServiceImpl implements ISysPostService {
+public class SysPostServiceImpl implements SysPostService {
     private final SysUserPostRepository userPostRepo;
     private final SysPostRepository sysPostRepo;
 

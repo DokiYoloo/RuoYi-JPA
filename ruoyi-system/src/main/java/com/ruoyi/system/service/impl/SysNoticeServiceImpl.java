@@ -4,7 +4,7 @@ import com.ruoyi.system.domain.SysNotice;
 import com.ruoyi.system.domain.convertor.SysNoticeConvertor;
 import com.ruoyi.system.domain.dto.SysNoticeDTO;
 import com.ruoyi.system.repository.SysNoticeRepository;
-import com.ruoyi.system.service.ISysNoticeService;
+import com.ruoyi.system.service.SysNoticeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +21,7 @@ import static com.ruoyi.common.utils.SecurityUtils.getUsername;
  */
 @Service
 @RequiredArgsConstructor
-public class SysNoticeServiceImpl implements ISysNoticeService {
+public class SysNoticeServiceImpl implements SysNoticeService {
     private final SysNoticeRepository noticeRepo;
 
     /**

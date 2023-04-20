@@ -8,20 +8,17 @@ import com.ruoyi.common.core.domain.entity.dto.SysMenuDTO;
 import com.ruoyi.common.core.domain.entity.dto.SysUserDTO;
 import com.ruoyi.system.domain.vo.RouterVo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.domain.entity.SysMenu;
-import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginBody;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.framework.web.service.SysLoginService;
 import com.ruoyi.framework.web.service.SysPermissionService;
-import com.ruoyi.system.service.ISysMenuService;
+import com.ruoyi.system.service.SysMenuService;
 
 /**
  * 登录验证
@@ -32,7 +29,7 @@ import com.ruoyi.system.service.ISysMenuService;
 @RequiredArgsConstructor
 public class SysLoginController {
     private final SysLoginService loginService;
-    private final ISysMenuService menuService;
+    private final SysMenuService menuService;
     private final SysPermissionService permissionService;
 
     /**

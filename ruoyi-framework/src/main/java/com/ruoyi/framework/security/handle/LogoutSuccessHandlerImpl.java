@@ -9,7 +9,7 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.manager.AsyncManager;
 import com.ruoyi.framework.manager.factory.AsyncFactory;
 import com.ruoyi.framework.web.service.TokenService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
@@ -25,14 +25,13 @@ import java.io.IOException;
  * @author ruoyi
  */
 @Configuration
+@RequiredArgsConstructor
 public class LogoutSuccessHandlerImpl implements LogoutSuccessHandler {
-    @Autowired
-    private TokenService tokenService;
+    private final TokenService tokenService;
 
     /**
      * 退出处理
      *
-     * @return
      */
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)

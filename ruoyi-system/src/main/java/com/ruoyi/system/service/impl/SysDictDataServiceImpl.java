@@ -6,8 +6,8 @@ import com.ruoyi.common.core.domain.entity.dto.SysDictDataDTO;
 import com.ruoyi.common.utils.DictUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.system.repository.SysDictDataRepository;
-import com.ruoyi.system.service.ISysDictDataService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ruoyi.system.service.SysDictDataService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,9 +21,9 @@ import java.util.Optional;
  * @author ruoyi
  */
 @Service
-public class SysDictDataServiceImpl implements ISysDictDataService {
-    @Autowired
-    private SysDictDataRepository dictDataRepo;
+@RequiredArgsConstructor
+public class SysDictDataServiceImpl implements SysDictDataService {
+    private final SysDictDataRepository dictDataRepo;
 
     /**
      * 根据条件分页查询字典数据

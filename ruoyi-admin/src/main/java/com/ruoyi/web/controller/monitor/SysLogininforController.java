@@ -22,7 +22,7 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.web.service.SysPasswordService;
 import com.ruoyi.system.domain.SysLogininfor;
-import com.ruoyi.system.service.ISysLogininforService;
+import com.ruoyi.system.service.SysLogininforService;
 
 /**
  * 系统访问记录
@@ -33,7 +33,7 @@ import com.ruoyi.system.service.ISysLogininforService;
 @RequiredArgsConstructor
 @RequestMapping("/monitor/logininfor")
 public class SysLogininforController extends BaseController {
-    private final ISysLogininforService logininforService;
+    private final SysLogininforService logininforService;
     private final SysPasswordService passwordService;
 
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:list')")

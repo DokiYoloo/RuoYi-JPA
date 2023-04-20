@@ -12,7 +12,7 @@ import com.ruoyi.system.domain.SysConfig;
 import com.ruoyi.system.domain.convertor.SysConfigConvertor;
 import com.ruoyi.system.domain.dto.SysConfigDTO;
 import com.ruoyi.system.repository.SysConfigRepository;
-import com.ruoyi.system.service.ISysConfigService;
+import com.ruoyi.system.service.SysConfigService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,7 +31,7 @@ import static com.ruoyi.common.utils.SecurityUtils.getUsername;
  */
 @Service
 @RequiredArgsConstructor
-public class SysConfigServiceImpl implements ISysConfigService {
+public class SysConfigServiceImpl implements SysConfigService {
     private final RedisCache redisCache;
     private final SysConfigRepository sysConfigRepo;
 
